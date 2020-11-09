@@ -76,7 +76,11 @@ def five_seconds_interval(interval=5):
     function_logger = logger.getChild("%s.%s.%s" % (inspect.stack()[2][3], inspect.stack()[1][3], inspect.stack()[0][3]))
     function_logger.info("metrics")
     response_string = ""
+    function_logger.info(CPU_DATA_LIST)
+    function_logger.info(CPU_DATA_LIST[0])
     for each in CPU_DATA_LIST[0]:
+        function_logger.info(each)
+
         response_string += "CPUUsage{cpu=%s, host=%s, measurement=%s,interval=%s} %s" % (each["cpu_name"], FLASK_HOST, "user", interval,
                                                                                          (CPU_DATA_LIST[0][each["cpu_name"]]["user"] -
                                                                                           CPU_DATA_LIST[1][each["cpu_name"]]["user"]))
