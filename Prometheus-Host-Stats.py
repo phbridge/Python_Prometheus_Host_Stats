@@ -128,9 +128,11 @@ def get_latest_cpu_stats():
         t = datetime.today()
         future = datetime(t.year, t.month, t.day, t.hour, t.minute, t.second)
         future += timedelta(seconds=5)
+        function_logger.info("sleeping for %s seconds" % (future - t).seconds)
         THREAD_TO_BREAK.wait((future - t).seconds)
         if THREAD_TO_BREAK.is_set():
             return
+        function_logger.info("opening file")
         with open("/proc/stat") as cpufile:
             cputimes = cpufile.readline().split(" ")
             cpu_scrape = {}
