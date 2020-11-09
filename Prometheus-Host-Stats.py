@@ -177,16 +177,16 @@ def get_latest_cpu_stats():
             if "cpu" in cputimes[0]:
                 cpu_scrape[cputimes[0]] = {}
                 cpu_scrape[cputimes[0]]['cpu_name'] = cputimes[0]
-                cpu_scrape[cputimes[0]]['user'] = cputimes[1]
-                cpu_scrape[cputimes[0]]['nice'] = cputimes[2]
-                cpu_scrape[cputimes[0]]['system'] = cputimes[3]
-                cpu_scrape[cputimes[0]]['idle'] = cputimes[4]
-                cpu_scrape[cputimes[0]]['iowait'] = cputimes[5]
-                cpu_scrape[cputimes[0]]['irq'] = cputimes[6]
-                cpu_scrape[cputimes[0]]['softirq'] = cputimes[7]
-                cpu_scrape[cputimes[0]]['steal'] = cputimes[8]
-                cpu_scrape[cputimes[0]]['guest'] = cputimes[9]
-                cpu_scrape[cputimes[0]]['guest_nice'] = cputimes[10]
+                cpu_scrape[cputimes[0]]['user'] = int(cputimes[1])
+                cpu_scrape[cputimes[0]]['nice'] = int(cputimes[2])
+                cpu_scrape[cputimes[0]]['system'] = int(cputimes[3])
+                cpu_scrape[cputimes[0]]['idle'] = int(cputimes[4])
+                cpu_scrape[cputimes[0]]['iowait'] = int(cputimes[5])
+                cpu_scrape[cputimes[0]]['irq'] = int(cputimes[6])
+                cpu_scrape[cputimes[0]]['softirq'] = int(cputimes[7])
+                cpu_scrape[cputimes[0]]['steal'] = int(cputimes[8])
+                cpu_scrape[cputimes[0]]['guest'] = int(cputimes[9])
+                cpu_scrape[cputimes[0]]['guest_nice'] = int(cputimes[10])
             global CPU_DATA_LIST
             CPU_DATA_LIST.append(cpu_scrape)
             CPU_DATA_LIST = CPU_DATA_LIST[-120:]
