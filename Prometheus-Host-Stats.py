@@ -65,7 +65,7 @@ THREAD_TO_BREAK = threading.Event()
 multiprocessing_manager = Manager()
 # NETWORKS_JSON = multiprocessing_manager.dict({})
 # DEVICES_JSON = multiprocessing_manager.dict({})
-CPU_DATA_LIST = multiprocessing_manager.Array(typecode="u")
+CPU_DATA_LIST = multiprocessing_manager.Array(typecode="u", sequence=[])
 # MAX_THREADS = 3
 
 flask_app = Flask(__name__)
