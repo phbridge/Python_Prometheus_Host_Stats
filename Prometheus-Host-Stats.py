@@ -76,8 +76,12 @@ def five_seconds_interval(interval=5):
     function_logger = logger.getChild("%s.%s.%s" % (inspect.stack()[2][3], inspect.stack()[1][3], inspect.stack()[0][3]))
     function_logger.info("metrics")
     response_string = ""
+    function_logger.info("whole")
     function_logger.info(CPU_DATA_LIST)
+    function_logger.info("first")
     function_logger.info(CPU_DATA_LIST[0])
+    function_logger.info("last")
+    function_logger.info(CPU_DATA_LIST[1])
     for each in CPU_DATA_LIST[0]:
         function_logger.info(each)
 
