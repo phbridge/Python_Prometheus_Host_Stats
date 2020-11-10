@@ -84,66 +84,16 @@ def five_seconds_interval(interval=5):
     function_logger.info(CPU_DATA_LIST[1])
     for cpu_name in CPU_DATA_LIST[0]:
         function_logger.info(cpu_name)
-        response_string += "CPUUsage{cpu=%s, host=%s, measurement=%s,interval=%s} %s" % (cpu_name, FLASK_HOST, "user", interval,
-                                                                                         (CPU_DATA_LIST[0][cpu_name]["user"] -
-                                                                                          CPU_DATA_LIST[1][cpu_name]["user"]))
-        response_string += "CPUUsage{cpu=%s, host=%s, measurement=%s interval=%s} %s" % (cpu_name, FLASK_HOST, "nice", interval,
-                                                                                         (CPU_DATA_LIST[0][cpu_name]["nice"] -
-                                                                                          CPU_DATA_LIST[1][cpu_name]["nice"]))
-        response_string += "CPUUsage{cpu=%s, host=%s, measurement=%s interval=%s} %s" % (cpu_name, FLASK_HOST, "system", interval,
-                                                                                         (CPU_DATA_LIST[0][cpu_name]["system"] -
-                                                                                          CPU_DATA_LIST[1][cpu_name]["system"]))
-        response_string += "CPUUsage{cpu=%s, host=%s, measurement=%s interval=%s} %s" % (cpu_name, FLASK_HOST, "idle", interval,
-                                                                                         (CPU_DATA_LIST[0][cpu_name]["idle"] -
-                                                                                          CPU_DATA_LIST[1][cpu_name]["idle"]))
-        response_string += "CPUUsage{cpu=%s, host=%s, measurement=%s interval=%s} %s" % (cpu_name, FLASK_HOST, "iowait", interval,
-                                                                                         (CPU_DATA_LIST[0][cpu_name]["iowait"] -
-                                                                                          CPU_DATA_LIST[1][cpu_name]["iowait"]))
-        response_string += "CPUUsage{cpu=%s, host=%s, measurement=%s interval=%s} %s" % (cpu_name, FLASK_HOST, "irq", interval,
-                                                                                         (CPU_DATA_LIST[0][cpu_name]["irq"] -
-                                                                                          CPU_DATA_LIST[1][cpu_name]["irq"]))
-        response_string += "CPUUsage{cpu=%s, host=%s, measurement=%s interval=%s} %s" % (cpu_name, FLASK_HOST, "softirq", interval,
-                                                                                         (CPU_DATA_LIST[0][cpu_name]["softirq"] -
-                                                                                          CPU_DATA_LIST[1][cpu_name]["softirq"]))
-        response_string += "CPUUsage{cpu=%s, host=%s, measurement=%s interval=%s} %s" % (cpu_name, FLASK_HOST, "steal", interval,
-                                                                                         (CPU_DATA_LIST[0][cpu_name]["steal"] -
-                                                                                          CPU_DATA_LIST[1][cpu_name]["steal"]))
-        response_string += "CPUUsage{cpu=%s, host=%s, measurement=%s interval=%s} %s" % (cpu_name, FLASK_HOST, "guest", interval,
-                                                                                         (CPU_DATA_LIST[0][cpu_name]["guest"] -
-                                                                                          CPU_DATA_LIST[1][cpu_name]["guest"]))
-        response_string += "CPUUsage{cpu=%s, host=%s, measurement=%s interval=%s} %s" % (cpu_name, FLASK_HOST, "guest_nice", interval,
-                                                                                         (CPU_DATA_LIST[0][cpu_name]["guest_nice"] -
-                                                                                          CPU_DATA_LIST[1][cpu_name]["guest_nice"]))
-        # response_string += "CPUUsage{cpu=%s, host=%s, measurement=%s,interval=%s} %s" % (each["cpu_name"], FLASK_HOST, "user", interval,
-        #                                                                                  (CPU_DATA_LIST[0][each["cpu_name"]]["user"] -
-        #                                                                                   CPU_DATA_LIST[1][each["cpu_name"]]["user"]))
-        # response_string += "CPUUsage{cpu=%s, host=%s, measurement=%s interval=%s} %s" % (each["cpu_name"], FLASK_HOST, "nice", interval,
-        #                                                                                  (CPU_DATA_LIST[0][each["cpu_name"]]["nice"] -
-        #                                                                                   CPU_DATA_LIST[1][each["cpu_name"]]["nice"]))
-        # response_string += "CPUUsage{cpu=%s, host=%s, measurement=%s interval=%s} %s" % (each["cpu_name"], FLASK_HOST, "system", interval,
-        #                                                                                  (CPU_DATA_LIST[0][each["cpu_name"]]["system"] -
-        #                                                                                   CPU_DATA_LIST[1][each["cpu_name"]]["system"]))
-        # response_string += "CPUUsage{cpu=%s, host=%s, measurement=%s interval=%s} %s" % (each["cpu_name"], FLASK_HOST, "idle", interval,
-        #                                                                                  (CPU_DATA_LIST[0][each["cpu_name"]]["idle"] -
-        #                                                                                   CPU_DATA_LIST[1][each["cpu_name"]]["idle"]))
-        # response_string += "CPUUsage{cpu=%s, host=%s, measurement=%s interval=%s} %s" % (each["cpu_name"], FLASK_HOST, "iowait", interval,
-        #                                                                                  (CPU_DATA_LIST[0][each["cpu_name"]]["iowait"] -
-        #                                                                                   CPU_DATA_LIST[1][each["cpu_name"]]["iowait"]))
-        # response_string += "CPUUsage{cpu=%s, host=%s, measurement=%s interval=%s} %s" % (each["cpu_name"], FLASK_HOST, "irq", interval,
-        #                                                                                  (CPU_DATA_LIST[0][each["cpu_name"]]["irq"] -
-        #                                                                                   CPU_DATA_LIST[1][each["cpu_name"]]["irq"]))
-        # response_string += "CPUUsage{cpu=%s, host=%s, measurement=%s interval=%s} %s" % (each["cpu_name"], FLASK_HOST, "softirq", interval,
-        #                                                                                  (CPU_DATA_LIST[0][each["cpu_name"]]["softirq"] -
-        #                                                                                   CPU_DATA_LIST[1][each["cpu_name"]]["softirq"]))
-        # response_string += "CPUUsage{cpu=%s, host=%s, measurement=%s interval=%s} %s" % (each["cpu_name"], FLASK_HOST, "steal", interval,
-        #                                                                                  (CPU_DATA_LIST[0][each["cpu_name"]]["steal"] -
-        #                                                                                   CPU_DATA_LIST[1][each["cpu_name"]]["steal"]))
-        # response_string += "CPUUsage{cpu=%s, host=%s, measurement=%s interval=%s} %s" % (each["cpu_name"], FLASK_HOST, "guest", interval,
-        #                                                                                  (CPU_DATA_LIST[0][each["cpu_name"]]["guest"] -
-        #                                                                                   CPU_DATA_LIST[1][each["cpu_name"]]["guest"]))
-        # response_string += "CPUUsage{cpu=%s, host=%s, measurement=%s interval=%s} %s" % (each["cpu_name"], FLASK_HOST, "guest_nice", interval,
-        #                                                                                  (CPU_DATA_LIST[0][each["cpu_name"]]["guest_nice"] -
-        #                                                                                   CPU_DATA_LIST[1][each["cpu_name"]]["guest_nice"]))
+        response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "user", interval, (CPU_DATA_LIST[0][cpu_name]["user"] - CPU_DATA_LIST[1][cpu_name]["user"]))
+        response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "nice", interval, (CPU_DATA_LIST[0][cpu_name]["nice"] - CPU_DATA_LIST[1][cpu_name]["nice"]))
+        response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "system", interval, (CPU_DATA_LIST[0][cpu_name]["system"] - CPU_DATA_LIST[1][cpu_name]["system"]))
+        response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "idle", interval, (CPU_DATA_LIST[0][cpu_name]["idle"] - CPU_DATA_LIST[1][cpu_name]["idle"]))
+        response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "iowait", interval, (CPU_DATA_LIST[0][cpu_name]["iowait"] - CPU_DATA_LIST[1][cpu_name]["iowait"]))
+        response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "irq", interval, (CPU_DATA_LIST[0][cpu_name]["irq"] - CPU_DATA_LIST[1][cpu_name]["irq"]))
+        response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "softirq", interval, (CPU_DATA_LIST[0][cpu_name]["softirq"] - CPU_DATA_LIST[1][cpu_name]["softirq"]))
+        response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "steal", interval, (CPU_DATA_LIST[0][cpu_name]["steal"] - CPU_DATA_LIST[1][cpu_name]["steal"]))
+        response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "guest", interval, (CPU_DATA_LIST[0][cpu_name]["guest"] - CPU_DATA_LIST[1][cpu_name]["guest"]))
+        response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "guest_nice", interval, (CPU_DATA_LIST[0][cpu_name]["guest_nice"] - CPU_DATA_LIST[1][cpu_name]["guest_nice"]))
     return response_string
 
 
