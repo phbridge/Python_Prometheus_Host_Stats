@@ -164,7 +164,8 @@ def get_latest_cpu_stats():
             return
         function_logger.info("opening file")
         with open("/proc/stat") as cpufile:
-            for cpuline in cpufile.readline():
+            for cpuline in cpufile.readlines():
+                function_logger.info(cpuline)
                 cputimes = cpuline.split()
                 cpu_scrape = {}
                 function_logger.info(cputimes[0])
