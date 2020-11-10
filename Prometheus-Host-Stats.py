@@ -335,9 +335,9 @@ def get_latest_mem_stats():
         global MEMORY_DATA
         with open("/proc/meminfo") as memfile:
             for memline in memfile.readlines():
-                function_logger.info(memline)
+                # function_logger.info(memline)
                 line = memline.split()
-                function_logger.info(line)
+                # function_logger.info(line)
                 if "SwapTotal" in line[0]:
                     MEMORY_DATA["SwapTotal"] = line[1]
                 elif "SwapFree" in line[0]:
@@ -356,6 +356,7 @@ def get_latest_mem_stats():
                     MEMORY_DATA["Active"] = line[1]
                 elif "Inactive" in line[0]:
                     MEMORY_DATA["Inactive"] = line[1]
+        function_logger.info(MEMORY_DATA)
 
 
 def get_latest_net_stats():
@@ -373,9 +374,7 @@ def get_latest_net_stats():
         global NETWORK_DATA
         with open("/proc/net/dev") as netfile:
             for netline in netfile.readlines():
-                if "Inter" or "face" in netline:
-                    continue
-                else:
+                if "Inter" or "face" not in netline:
                     line = netline.split()
                     function_logger.info(line)
                     interface_name = line[0].strip(":")
