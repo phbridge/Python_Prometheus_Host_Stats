@@ -79,16 +79,50 @@ def five_seconds_interval(interval=5):
     try:
         for cpu_name in CPU_DATA_LIST[0]:
             function_logger.info(cpu_name)
-            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "user", interval, (CPU_DATA_LIST[1][cpu_name]["user"] - CPU_DATA_LIST[0][cpu_name]["user"]))
-            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "nice", interval, (CPU_DATA_LIST[1][cpu_name]["nice"] - CPU_DATA_LIST[0][cpu_name]["nice"]))
-            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "system", interval, (CPU_DATA_LIST[1][cpu_name]["system"] - CPU_DATA_LIST[0][cpu_name]["system"]))
-            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "idle", interval, (CPU_DATA_LIST[1][cpu_name]["idle"] - CPU_DATA_LIST[0][cpu_name]["idle"]))
-            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "iowait", interval, (CPU_DATA_LIST[1][cpu_name]["iowait"] - CPU_DATA_LIST[0][cpu_name]["iowait"]))
-            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "irq", interval, (CPU_DATA_LIST[1][cpu_name]["irq"] - CPU_DATA_LIST[0][cpu_name]["irq"]))
-            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "softirq", interval, (CPU_DATA_LIST[1][cpu_name]["softirq"] - CPU_DATA_LIST[0][cpu_name]["softirq"]))
-            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "steal", interval, (CPU_DATA_LIST[1][cpu_name]["steal"] - CPU_DATA_LIST[0][cpu_name]["steal"]))
-            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "guest", interval, (CPU_DATA_LIST[1][cpu_name]["guest"] - CPU_DATA_LIST[0][cpu_name]["guest"]))
-            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "guest_nice", interval, (CPU_DATA_LIST[1][cpu_name]["guest_nice"] - CPU_DATA_LIST[0][cpu_name]["guest_nice"]))
+            cpu_user = CPU_DATA_LIST[1][cpu_name]["user"] - CPU_DATA_LIST[0][cpu_name]["user"]
+            cpu_nice = CPU_DATA_LIST[1][cpu_name]["nice"] - CPU_DATA_LIST[0][cpu_name]["nice"]
+            cpu_system = CPU_DATA_LIST[1][cpu_name]["system"] - CPU_DATA_LIST[0][cpu_name]["system"]
+            cpu_idle = CPU_DATA_LIST[1][cpu_name]["idle"] - CPU_DATA_LIST[0][cpu_name]["idle"]
+            cpu_iowait = CPU_DATA_LIST[1][cpu_name]["iowait"] - CPU_DATA_LIST[0][cpu_name]["iowait"]
+            cpu_irq = CPU_DATA_LIST[1][cpu_name]["irq"] - CPU_DATA_LIST[0][cpu_name]["irq"]
+            cpu_softirq = CPU_DATA_LIST[1][cpu_name]["softirq"] - CPU_DATA_LIST[0][cpu_name]["softirq"]
+            cpu_steal = CPU_DATA_LIST[1][cpu_name]["steal"] - CPU_DATA_LIST[0][cpu_name]["steal"]
+            cpu_guest = CPU_DATA_LIST[1][cpu_name]["guest"] - CPU_DATA_LIST[0][cpu_name]["guest"]
+            cpu_guest_nice = CPU_DATA_LIST[1][cpu_name]["guest_nice"] - CPU_DATA_LIST[0][cpu_name]["guest_nice"]
+            cpu_total = cpu_user + cpu_nice + cpu_system + cpu_idle + cpu_iowait + cpu_irq + cpu_softirq + cpu_steal + cpu_guest + cpu_guest_nice
+            cpu_user_pc = cpu_user / cpu_total
+            cpu_nice_pc = cpu_nice / cpu_total
+            cpu_system_pc = cpu_system / cpu_total
+            cpu_idle_pc = cpu_idle / cpu_total
+            cpu_iowait_pc = cpu_iowait / cpu_total
+            cpu_irq_pc = cpu_irq / cpu_total
+            cpu_softirq_pc = cpu_softirq / cpu_total
+            cpu_steal_pc = cpu_steal / cpu_total
+            cpu_guest_pc = cpu_guest / cpu_total
+            cpu_guest_nice_pc = cpu_guest_nice / cpu_total
+
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "user", interval, cpu_user)
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "nice", interval, cpu_nice)
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "system", interval, cpu_system)
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "idle", interval, cpu_idle)
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "iowait", interval, cpu_iowait)
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "irq", interval, cpu_irq)
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "softirq", interval, cpu_softirq)
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "steal", interval, cpu_steal)
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "guest", interval, cpu_guest)
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "guest_nice", interval, cpu_guest_nice)
+
+            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "user", interval, cpu_user_pc)
+            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "nice", interval, cpu_nice_pc)
+            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "system", interval, cpu_system_pc)
+            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "idle", interval, cpu_idle_pc)
+            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "iowait", interval, cpu_iowait_pc)
+            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "irq", interval, cpu_irq_pc)
+            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "softirq", interval, cpu_softirq_pc)
+            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "steal", interval, cpu_steal_pc)
+            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "guest", interval, cpu_guest_pc)
+            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "guest_nice", interval, cpu_guest_nice_pc)
+
     except Exception as e:
         function_logger.error("something went bad with 5 second stats")
         function_logger.error("Unexpected error:" + str(sys.exc_info()[0]))
@@ -104,16 +138,50 @@ def fifteen_seconds_interval(interval=15):
     try:
         for cpu_name in CPU_DATA_LIST[0]:
             function_logger.info(cpu_name)
-            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "user", interval, (CPU_DATA_LIST[3][cpu_name]["user"] - CPU_DATA_LIST[0][cpu_name]["user"]))
-            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "nice", interval, (CPU_DATA_LIST[3][cpu_name]["nice"] - CPU_DATA_LIST[0][cpu_name]["nice"]))
-            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "system", interval, (CPU_DATA_LIST[3][cpu_name]["system"] - CPU_DATA_LIST[0][cpu_name]["system"]))
-            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "idle", interval, (CPU_DATA_LIST[3][cpu_name]["idle"] - CPU_DATA_LIST[0][cpu_name]["idle"]))
-            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "iowait", interval, (CPU_DATA_LIST[3][cpu_name]["iowait"] - CPU_DATA_LIST[0][cpu_name]["iowait"]))
-            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "irq", interval, (CPU_DATA_LIST[3][cpu_name]["irq"] - CPU_DATA_LIST[0][cpu_name]["irq"]))
-            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "softirq", interval, (CPU_DATA_LIST[3][cpu_name]["softirq"] - CPU_DATA_LIST[0][cpu_name]["softirq"]))
-            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "steal", interval, (CPU_DATA_LIST[3][cpu_name]["steal"] - CPU_DATA_LIST[0][cpu_name]["steal"]))
-            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "guest", interval, (CPU_DATA_LIST[3][cpu_name]["guest"] - CPU_DATA_LIST[0][cpu_name]["guest"]))
-            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "guest_nice", interval, (CPU_DATA_LIST[3][cpu_name]["guest_nice"] - CPU_DATA_LIST[0][cpu_name]["guest_nice"]))
+            cpu_user = CPU_DATA_LIST[3][cpu_name]["user"] - CPU_DATA_LIST[0][cpu_name]["user"]
+            cpu_nice = CPU_DATA_LIST[3][cpu_name]["nice"] - CPU_DATA_LIST[0][cpu_name]["nice"]
+            cpu_system = CPU_DATA_LIST[3][cpu_name]["system"] - CPU_DATA_LIST[0][cpu_name]["system"]
+            cpu_idle = CPU_DATA_LIST[3][cpu_name]["idle"] - CPU_DATA_LIST[0][cpu_name]["idle"]
+            cpu_iowait = CPU_DATA_LIST[3][cpu_name]["iowait"] - CPU_DATA_LIST[0][cpu_name]["iowait"]
+            cpu_irq = CPU_DATA_LIST[3][cpu_name]["irq"] - CPU_DATA_LIST[0][cpu_name]["irq"]
+            cpu_softirq = CPU_DATA_LIST[3][cpu_name]["softirq"] - CPU_DATA_LIST[0][cpu_name]["softirq"]
+            cpu_steal = CPU_DATA_LIST[3][cpu_name]["steal"] - CPU_DATA_LIST[0][cpu_name]["steal"]
+            cpu_guest = CPU_DATA_LIST[3][cpu_name]["guest"] - CPU_DATA_LIST[0][cpu_name]["guest"]
+            cpu_guest_nice = CPU_DATA_LIST[3][cpu_name]["guest_nice"] - CPU_DATA_LIST[0][cpu_name]["guest_nice"]
+            cpu_total = cpu_user + cpu_nice + cpu_system + cpu_idle + cpu_iowait + cpu_irq + cpu_softirq + cpu_steal + cpu_guest + cpu_guest_nice
+            cpu_user_pc = cpu_user / cpu_total
+            cpu_nice_pc = cpu_nice / cpu_total
+            cpu_system_pc = cpu_system / cpu_total
+            cpu_idle_pc = cpu_idle / cpu_total
+            cpu_iowait_pc = cpu_iowait / cpu_total
+            cpu_irq_pc = cpu_irq / cpu_total
+            cpu_softirq_pc = cpu_softirq / cpu_total
+            cpu_steal_pc = cpu_steal / cpu_total
+            cpu_guest_pc = cpu_guest / cpu_total
+            cpu_guest_nice_pc = cpu_guest_nice / cpu_total
+
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "user", interval, cpu_user)
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "nice", interval, cpu_nice)
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "system", interval, cpu_system)
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "idle", interval, cpu_idle)
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "iowait", interval, cpu_iowait)
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "irq", interval, cpu_irq)
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "softirq", interval, cpu_softirq)
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "steal", interval, cpu_steal)
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "guest", interval, cpu_guest)
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "guest_nice", interval, cpu_guest_nice)
+
+            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "user", interval, cpu_user_pc)
+            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "nice", interval, cpu_nice_pc)
+            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "system", interval, cpu_system_pc)
+            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "idle", interval, cpu_idle_pc)
+            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "iowait", interval, cpu_iowait_pc)
+            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "irq", interval, cpu_irq_pc)
+            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "softirq", interval, cpu_softirq_pc)
+            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "steal", interval, cpu_steal_pc)
+            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "guest", interval, cpu_guest_pc)
+            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "guest_nice", interval, cpu_guest_nice_pc)
+
     except Exception as e:
         function_logger.error("something went bad with 5 second stats")
         function_logger.error("Unexpected error:" + str(sys.exc_info()[0]))
@@ -129,16 +197,50 @@ def one_min_interval(interval=60):
     try:
         for cpu_name in CPU_DATA_LIST[0]:
             function_logger.info(cpu_name)
-            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "user", interval, (CPU_DATA_LIST[12][cpu_name]["user"] - CPU_DATA_LIST[0][cpu_name]["user"]))
-            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "nice", interval, (CPU_DATA_LIST[12][cpu_name]["nice"] - CPU_DATA_LIST[0][cpu_name]["nice"]))
-            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "system", interval, (CPU_DATA_LIST[12][cpu_name]["system"] - CPU_DATA_LIST[0][cpu_name]["system"]))
-            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "idle", interval, (CPU_DATA_LIST[12][cpu_name]["idle"] - CPU_DATA_LIST[0][cpu_name]["idle"]))
-            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "iowait", interval, (CPU_DATA_LIST[12][cpu_name]["iowait"] - CPU_DATA_LIST[0][cpu_name]["iowait"]))
-            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "irq", interval, (CPU_DATA_LIST[12][cpu_name]["irq"] - CPU_DATA_LIST[0][cpu_name]["irq"]))
-            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "softirq", interval, (CPU_DATA_LIST[12][cpu_name]["softirq"] - CPU_DATA_LIST[0][cpu_name]["softirq"]))
-            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "steal", interval, (CPU_DATA_LIST[12][cpu_name]["steal"] - CPU_DATA_LIST[0][cpu_name]["steal"]))
-            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "guest", interval, (CPU_DATA_LIST[12][cpu_name]["guest"] - CPU_DATA_LIST[0][cpu_name]["guest"]))
-            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "guest_nice", interval, (CPU_DATA_LIST[12][cpu_name]["guest_nice"] - CPU_DATA_LIST[0][cpu_name]["guest_nice"]))
+            cpu_user = CPU_DATA_LIST[12][cpu_name]["user"] - CPU_DATA_LIST[0][cpu_name]["user"]
+            cpu_nice = CPU_DATA_LIST[12][cpu_name]["nice"] - CPU_DATA_LIST[0][cpu_name]["nice"]
+            cpu_system = CPU_DATA_LIST[12][cpu_name]["system"] - CPU_DATA_LIST[0][cpu_name]["system"]
+            cpu_idle = CPU_DATA_LIST[12][cpu_name]["idle"] - CPU_DATA_LIST[0][cpu_name]["idle"]
+            cpu_iowait = CPU_DATA_LIST[12][cpu_name]["iowait"] - CPU_DATA_LIST[0][cpu_name]["iowait"]
+            cpu_irq = CPU_DATA_LIST[12][cpu_name]["irq"] - CPU_DATA_LIST[0][cpu_name]["irq"]
+            cpu_softirq = CPU_DATA_LIST[12][cpu_name]["softirq"] - CPU_DATA_LIST[0][cpu_name]["softirq"]
+            cpu_steal = CPU_DATA_LIST[12][cpu_name]["steal"] - CPU_DATA_LIST[0][cpu_name]["steal"]
+            cpu_guest = CPU_DATA_LIST[12][cpu_name]["guest"] - CPU_DATA_LIST[0][cpu_name]["guest"]
+            cpu_guest_nice = CPU_DATA_LIST[12][cpu_name]["guest_nice"] - CPU_DATA_LIST[0][cpu_name]["guest_nice"]
+            cpu_total = cpu_user + cpu_nice + cpu_system + cpu_idle + cpu_iowait + cpu_irq + cpu_softirq + cpu_steal + cpu_guest + cpu_guest_nice
+            cpu_user_pc = cpu_user / cpu_total
+            cpu_nice_pc = cpu_nice / cpu_total
+            cpu_system_pc = cpu_system / cpu_total
+            cpu_idle_pc = cpu_idle / cpu_total
+            cpu_iowait_pc = cpu_iowait / cpu_total
+            cpu_irq_pc = cpu_irq / cpu_total
+            cpu_softirq_pc = cpu_softirq / cpu_total
+            cpu_steal_pc = cpu_steal / cpu_total
+            cpu_guest_pc = cpu_guest / cpu_total
+            cpu_guest_nice_pc = cpu_guest_nice / cpu_total
+
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "user", interval, cpu_user)
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "nice", interval, cpu_nice)
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "system", interval, cpu_system)
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "idle", interval, cpu_idle)
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "iowait", interval, cpu_iowait)
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "irq", interval, cpu_irq)
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "softirq", interval, cpu_softirq)
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "steal", interval, cpu_steal)
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "guest", interval, cpu_guest)
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "guest_nice", interval, cpu_guest_nice)
+
+            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "user", interval, cpu_user_pc)
+            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "nice", interval, cpu_nice_pc)
+            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "system", interval, cpu_system_pc)
+            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "idle", interval, cpu_idle_pc)
+            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "iowait", interval, cpu_iowait_pc)
+            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "irq", interval, cpu_irq_pc)
+            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "softirq", interval, cpu_softirq_pc)
+            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "steal", interval, cpu_steal_pc)
+            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "guest", interval, cpu_guest_pc)
+            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "guest_nice", interval, cpu_guest_nice_pc)
+
     except Exception as e:
         function_logger.error("something went bad with 5 second stats")
         function_logger.error("Unexpected error:" + str(sys.exc_info()[0]))
