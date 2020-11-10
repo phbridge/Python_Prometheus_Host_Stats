@@ -164,23 +164,24 @@ def get_latest_cpu_stats():
             return
         function_logger.info("opening file")
         with open("/proc/stat") as cpufile:
-            cputimes = cpufile.readline().split()
-            cpu_scrape = {}
-            function_logger.info(cputimes[0])
-            if "cpu" in cputimes[0]:
+            for cpuline in cpufile.readline():
+                cputimes = cpuline.split()
+                cpu_scrape = {}
                 function_logger.info(cputimes[0])
-                cpu_scrape[cputimes[0]] = {}
-                cpu_scrape[cputimes[0]]['cpu_name'] = cputimes[0]
-                cpu_scrape[cputimes[0]]['user'] = int(cputimes[1])
-                cpu_scrape[cputimes[0]]['nice'] = int(cputimes[2])
-                cpu_scrape[cputimes[0]]['system'] = int(cputimes[3])
-                cpu_scrape[cputimes[0]]['idle'] = int(cputimes[4])
-                cpu_scrape[cputimes[0]]['iowait'] = int(cputimes[5])
-                cpu_scrape[cputimes[0]]['irq'] = int(cputimes[6])
-                cpu_scrape[cputimes[0]]['softirq'] = int(cputimes[7])
-                cpu_scrape[cputimes[0]]['steal'] = int(cputimes[8])
-                cpu_scrape[cputimes[0]]['guest'] = int(cputimes[9])
-                cpu_scrape[cputimes[0]]['guest_nice'] = int(cputimes[10])
+                if "cpu" in cputimes[0]:
+                    function_logger.info(cputimes[0])
+                    cpu_scrape[cputimes[0]] = {}
+                    cpu_scrape[cputimes[0]]['cpu_name'] = cputimes[0]
+                    cpu_scrape[cputimes[0]]['user'] = int(cputimes[1])
+                    cpu_scrape[cputimes[0]]['nice'] = int(cputimes[2])
+                    cpu_scrape[cputimes[0]]['system'] = int(cputimes[3])
+                    cpu_scrape[cputimes[0]]['idle'] = int(cputimes[4])
+                    cpu_scrape[cputimes[0]]['iowait'] = int(cputimes[5])
+                    cpu_scrape[cputimes[0]]['irq'] = int(cputimes[6])
+                    cpu_scrape[cputimes[0]]['softirq'] = int(cputimes[7])
+                    cpu_scrape[cputimes[0]]['steal'] = int(cputimes[8])
+                    cpu_scrape[cputimes[0]]['guest'] = int(cputimes[9])
+                    cpu_scrape[cputimes[0]]['guest_nice'] = int(cputimes[10])
 
             function_logger.info(cpu_scrape)
             global CPU_DATA_LIST
