@@ -182,7 +182,7 @@ def get_latest_cpu_stats():
             global CPU_DATA_LIST
             CPU_DATA_LIST.append(cpu_scrape)
             CPU_DATA_LIST = CPU_DATA_LIST[-120:]
-
+#
         # response_string += "CPUUsage{cpu=%s, host=%s, measurement=%s,interval=%s} %s" % (cputimes[0], FLASK_HOST, "user", interval, cputimes[1])
         # response_string += "CPUUsage{cpu=%s, host=%s, measurement=%s interval=%s} %s" % (cputimes[0], FLASK_HOST, "nice", interval, cputimes[2])
         # response_string += "CPUUsage{cpu=%s, host=%s, measurement=%s interval=%s} %s" % (cputimes[0], FLASK_HOST, "system", interval, cputimes[3])
