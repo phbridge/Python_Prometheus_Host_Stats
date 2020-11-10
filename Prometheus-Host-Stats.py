@@ -290,7 +290,7 @@ def get_latest_cpu_stats():
         THREAD_TO_BREAK.wait((future - t).seconds)
         if THREAD_TO_BREAK.is_set():
             return
-        function_logger.info("opening file")
+        function_logger.info("opening cpu file")
         with open("/proc/stat") as cpufile:
             cpu_scrape = {}
             for cpuline in cpufile.readlines():
@@ -322,7 +322,7 @@ def get_latest_cpu_stats():
 
 def get_latest_mem_stats():
     function_logger = logger.getChild("%s.%s.%s" % (inspect.stack()[2][3], inspect.stack()[1][3], inspect.stack()[0][3]))
-    function_logger.info("get_latest_cpu_stats")
+    function_logger.info("get_latest_mem_stats")
     while not THREAD_TO_BREAK.is_set():
         t = datetime.today()
         future = datetime(t.year, t.month, t.day, t.hour, t.minute, t.second)
@@ -331,34 +331,36 @@ def get_latest_mem_stats():
         THREAD_TO_BREAK.wait((future - t).seconds)
         if THREAD_TO_BREAK.is_set():
             return
-        function_logger.info("opening file")
+        function_logger.info("opening mem file")
         global MEMORY_DATA
         with open("/proc/meminfo") as memfile:
             for memline in memfile.readlines():
+                function_logger.info(memline)
                 line = memline.split()
-                if "SwapTotal" in memline[0]:
-                    MEMORY_DATA["SwapTotal"] = memline[1]
-                elif "SwapFree" in memline[0]:
-                    MEMORY_DATA["SwapFree"] = memline[1]
-                elif "MemTotal" in memline[0]:
-                    MEMORY_DATA["MemTotal"] = memline[1]
-                elif "MemFree" in memline[0]:
-                    MEMORY_DATA["MemFree"] = memline[1]
-                elif "MemAvailable" in memline[0]:
-                    MEMORY_DATA["MemAvailable"] = memline[1]
-                elif "Buffers" in memline[0]:
-                    MEMORY_DATA["Buffers"] = memline[1]
-                elif "Cached" in memline[0]:
-                    MEMORY_DATA["Cached"] = memline[1]
-                elif "Active" in memline[0]:
-                    MEMORY_DATA["Active"] = memline[1]
-                elif "Inactive" in memline[0]:
-                    MEMORY_DATA["Inactive"] = memline[1]
+                function_logger.info(line)
+                if "SwapTotal" in line[0]:
+                    MEMORY_DATA["SwapTotal"] = line[1]
+                elif "SwapFree" in line[0]:
+                    MEMORY_DATA["SwapFree"] = line[1]
+                elif "MemTotal" in line[0]:
+                    MEMORY_DATA["MemTotal"] = line[1]
+                elif "MemFree" in line[0]:
+                    MEMORY_DATA["MemFree"] = line[1]
+                elif "MemAvailable" in line[0]:
+                    MEMORY_DATA["MemAvailable"] = line[1]
+                elif "Buffers" in line[0]:
+                    MEMORY_DATA["Buffers"] = line[1]
+                elif "Cached" in line[0]:
+                    MEMORY_DATA["Cached"] = line[1]
+                elif "Active" in line[0]:
+                    MEMORY_DATA["Active"] = line[1]
+                elif "Inactive" in line[0]:
+                    MEMORY_DATA["Inactive"] = line[1]
 
 
 def get_latest_net_stats():
     function_logger = logger.getChild("%s.%s.%s" % (inspect.stack()[2][3], inspect.stack()[1][3], inspect.stack()[0][3]))
-    function_logger.info("get_latest_cpu_stats")
+    function_logger.info("get_latest_net_stats")
     while not THREAD_TO_BREAK.is_set():
         t = datetime.today()
         future = datetime(t.year, t.month, t.day, t.hour, t.minute, t.second)
@@ -367,7 +369,7 @@ def get_latest_net_stats():
         THREAD_TO_BREAK.wait((future - t).seconds)
         if THREAD_TO_BREAK.is_set():
             return
-        function_logger.info("opening file")
+        function_logger.info("opening net file")
         global NETWORK_DATA
         with open("/proc/net/dev") as netfile:
             for netline in netfile.readlines():
@@ -375,6 +377,7 @@ def get_latest_net_stats():
                     continue
                 else:
                     line = netline.split()
+                    function_logger.info(line)
                     interface_name = line[0].strip(":")
                     NETWORK_DATA[interface_name]["R_bytes"] = line[1]
                     NETWORK_DATA[interface_name]["R_packets"] = line[2]
@@ -454,7 +457,9 @@ def graceful_killer(signal_number, frame):
     function_logger.info('Received:' + str(signal_number))
     THREAD_TO_BREAK.set()
     function_logger.info("set thread to break")
-    update_thread.join()
+    cpu_update_thread.join()
+    mem_update_thread.join()
+    net_update_thread.join()
     function_logger.info("joined auto_update_thread thread")
     http_server.stop()
     function_logger.info("stopped HTTP server")
