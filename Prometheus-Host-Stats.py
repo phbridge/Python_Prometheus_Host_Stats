@@ -375,8 +375,8 @@ def get_latest_net_stats():
         with open("/proc/net/dev") as netfile:
             for netline in netfile.readlines():
                 function_logger.info(netline)
-                if {"Inter", "face"} not in netline:
-                    line = netline.split()
+                line = netline.split()
+                if {"Inter", "face"} not in line[0]:
                     function_logger.info(line)
                     interface_name = line[0].strip(":")
                     NETWORK_DATA[interface_name]["R_bytes"] = line[1]
