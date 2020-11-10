@@ -43,8 +43,8 @@ from multiprocessing import Manager     # variables between processes dict
 # import json                             # building json DB/ parsing stuff
 # import os
 # import time
-# import sys                              # for error to catch and debug
-# import traceback                        # helps add more logging infomation
+import sys                              # for error to catch and debug
+import traceback                        # helps add more logging infomation
 # from multiprocessing import Pool        # trying to run in parallel rather than in sequence
 # import requests                         # fetching updates
 # from flask import send_file             # Send Word Cloud via Flask
@@ -74,35 +74,77 @@ flask_app = Flask(__name__)
 
 def five_seconds_interval(interval=5):
     function_logger = logger.getChild("%s.%s.%s" % (inspect.stack()[2][3], inspect.stack()[1][3], inspect.stack()[0][3]))
-    function_logger.info("metrics")
+    function_logger.info("five_seconds_interval")
     response_string = ""
-    function_logger.info("whole")
-    function_logger.info(CPU_DATA_LIST)
-    function_logger.info("first")
-    function_logger.info(CPU_DATA_LIST[0])
-    function_logger.info("last")
-    function_logger.info(CPU_DATA_LIST[1])
-    for cpu_name in CPU_DATA_LIST[0]:
-        function_logger.info(cpu_name)
-        response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "user", interval, (CPU_DATA_LIST[0][cpu_name]["user"] - CPU_DATA_LIST[1][cpu_name]["user"]))
-        response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "nice", interval, (CPU_DATA_LIST[0][cpu_name]["nice"] - CPU_DATA_LIST[1][cpu_name]["nice"]))
-        response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "system", interval, (CPU_DATA_LIST[0][cpu_name]["system"] - CPU_DATA_LIST[1][cpu_name]["system"]))
-        response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "idle", interval, (CPU_DATA_LIST[0][cpu_name]["idle"] - CPU_DATA_LIST[1][cpu_name]["idle"]))
-        response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "iowait", interval, (CPU_DATA_LIST[0][cpu_name]["iowait"] - CPU_DATA_LIST[1][cpu_name]["iowait"]))
-        response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "irq", interval, (CPU_DATA_LIST[0][cpu_name]["irq"] - CPU_DATA_LIST[1][cpu_name]["irq"]))
-        response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "softirq", interval, (CPU_DATA_LIST[0][cpu_name]["softirq"] - CPU_DATA_LIST[1][cpu_name]["softirq"]))
-        response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "steal", interval, (CPU_DATA_LIST[0][cpu_name]["steal"] - CPU_DATA_LIST[1][cpu_name]["steal"]))
-        response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "guest", interval, (CPU_DATA_LIST[0][cpu_name]["guest"] - CPU_DATA_LIST[1][cpu_name]["guest"]))
-        response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "guest_nice", interval, (CPU_DATA_LIST[0][cpu_name]["guest_nice"] - CPU_DATA_LIST[1][cpu_name]["guest_nice"]))
+    try:
+        for cpu_name in CPU_DATA_LIST[0]:
+            function_logger.info(cpu_name)
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "user", interval, (CPU_DATA_LIST[1][cpu_name]["user"] - CPU_DATA_LIST[0][cpu_name]["user"]))
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "nice", interval, (CPU_DATA_LIST[1][cpu_name]["nice"] - CPU_DATA_LIST[0][cpu_name]["nice"]))
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "system", interval, (CPU_DATA_LIST[1][cpu_name]["system"] - CPU_DATA_LIST[0][cpu_name]["system"]))
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "idle", interval, (CPU_DATA_LIST[1][cpu_name]["idle"] - CPU_DATA_LIST[0][cpu_name]["idle"]))
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "iowait", interval, (CPU_DATA_LIST[1][cpu_name]["iowait"] - CPU_DATA_LIST[0][cpu_name]["iowait"]))
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "irq", interval, (CPU_DATA_LIST[1][cpu_name]["irq"] - CPU_DATA_LIST[0][cpu_name]["irq"]))
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "softirq", interval, (CPU_DATA_LIST[1][cpu_name]["softirq"] - CPU_DATA_LIST[0][cpu_name]["softirq"]))
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "steal", interval, (CPU_DATA_LIST[1][cpu_name]["steal"] - CPU_DATA_LIST[0][cpu_name]["steal"]))
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "guest", interval, (CPU_DATA_LIST[1][cpu_name]["guest"] - CPU_DATA_LIST[0][cpu_name]["guest"]))
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "guest_nice", interval, (CPU_DATA_LIST[1][cpu_name]["guest_nice"] - CPU_DATA_LIST[0][cpu_name]["guest_nice"]))
+    except Exception as e:
+        function_logger.error("something went bad with 5 second stats")
+        function_logger.error("Unexpected error:" + str(sys.exc_info()[0]))
+        function_logger.error("Unexpected error:" + str(e))
+        function_logger.error("TRACEBACK=" + str(traceback.format_exc()))
     return response_string
 
 
 def fifteen_seconds_interval(interval=15):
-    print("nothing")
+    function_logger = logger.getChild("%s.%s.%s" % (inspect.stack()[2][3], inspect.stack()[1][3], inspect.stack()[0][3]))
+    function_logger.info("fifteen_seconds_interval")
+    response_string = ""
+    try:
+        for cpu_name in CPU_DATA_LIST[0]:
+            function_logger.info(cpu_name)
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "user", interval, (CPU_DATA_LIST[3][cpu_name]["user"] - CPU_DATA_LIST[0][cpu_name]["user"]))
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "nice", interval, (CPU_DATA_LIST[3][cpu_name]["nice"] - CPU_DATA_LIST[0][cpu_name]["nice"]))
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "system", interval, (CPU_DATA_LIST[3][cpu_name]["system"] - CPU_DATA_LIST[0][cpu_name]["system"]))
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "idle", interval, (CPU_DATA_LIST[3][cpu_name]["idle"] - CPU_DATA_LIST[0][cpu_name]["idle"]))
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "iowait", interval, (CPU_DATA_LIST[3][cpu_name]["iowait"] - CPU_DATA_LIST[0][cpu_name]["iowait"]))
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "irq", interval, (CPU_DATA_LIST[3][cpu_name]["irq"] - CPU_DATA_LIST[0][cpu_name]["irq"]))
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "softirq", interval, (CPU_DATA_LIST[3][cpu_name]["softirq"] - CPU_DATA_LIST[0][cpu_name]["softirq"]))
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "steal", interval, (CPU_DATA_LIST[3][cpu_name]["steal"] - CPU_DATA_LIST[0][cpu_name]["steal"]))
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "guest", interval, (CPU_DATA_LIST[3][cpu_name]["guest"] - CPU_DATA_LIST[0][cpu_name]["guest"]))
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "guest_nice", interval, (CPU_DATA_LIST[3][cpu_name]["guest_nice"] - CPU_DATA_LIST[0][cpu_name]["guest_nice"]))
+    except Exception as e:
+        function_logger.error("something went bad with 5 second stats")
+        function_logger.error("Unexpected error:" + str(sys.exc_info()[0]))
+        function_logger.error("Unexpected error:" + str(e))
+        function_logger.error("TRACEBACK=" + str(traceback.format_exc()))
+    return response_string
 
 
 def one_min_interval(interval=60):
-    print("nothing")
+    function_logger = logger.getChild("%s.%s.%s" % (inspect.stack()[2][3], inspect.stack()[1][3], inspect.stack()[0][3]))
+    function_logger.info("one_min_interval")
+    response_string = ""
+    try:
+        for cpu_name in CPU_DATA_LIST[0]:
+            function_logger.info(cpu_name)
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "user", interval, (CPU_DATA_LIST[12][cpu_name]["user"] - CPU_DATA_LIST[0][cpu_name]["user"]))
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "nice", interval, (CPU_DATA_LIST[12][cpu_name]["nice"] - CPU_DATA_LIST[0][cpu_name]["nice"]))
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "system", interval, (CPU_DATA_LIST[12][cpu_name]["system"] - CPU_DATA_LIST[0][cpu_name]["system"]))
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "idle", interval, (CPU_DATA_LIST[12][cpu_name]["idle"] - CPU_DATA_LIST[0][cpu_name]["idle"]))
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "iowait", interval, (CPU_DATA_LIST[12][cpu_name]["iowait"] - CPU_DATA_LIST[0][cpu_name]["iowait"]))
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "irq", interval, (CPU_DATA_LIST[12][cpu_name]["irq"] - CPU_DATA_LIST[0][cpu_name]["irq"]))
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "softirq", interval, (CPU_DATA_LIST[12][cpu_name]["softirq"] - CPU_DATA_LIST[0][cpu_name]["softirq"]))
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "steal", interval, (CPU_DATA_LIST[12][cpu_name]["steal"] - CPU_DATA_LIST[0][cpu_name]["steal"]))
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "guest", interval, (CPU_DATA_LIST[12][cpu_name]["guest"] - CPU_DATA_LIST[0][cpu_name]["guest"]))
+            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOST, "guest_nice", interval, (CPU_DATA_LIST[12][cpu_name]["guest_nice"] - CPU_DATA_LIST[0][cpu_name]["guest_nice"]))
+    except Exception as e:
+        function_logger.error("something went bad with 5 second stats")
+        function_logger.error("Unexpected error:" + str(sys.exc_info()[0]))
+        function_logger.error("Unexpected error:" + str(e))
+        function_logger.error("TRACEBACK=" + str(traceback.format_exc()))
+    return response_string
 
 
 def five_min_interval(interval=300):
@@ -159,6 +201,9 @@ def metrics():
     function_logger.info("metrics")
     return_string = ""
     return_string += five_seconds_interval()
+    return_string += fifteen_seconds_interval()
+    return_string += one_min_interval()
+    # return_string += five_min_interval()
     return Response(return_string, mimetype='text/plain')
 
 
