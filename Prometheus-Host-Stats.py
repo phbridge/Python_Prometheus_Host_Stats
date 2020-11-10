@@ -491,8 +491,12 @@ if __name__ == "__main__":
 
     # Start the cron type jobs
     logger.info("start the cron auto update thread")
-    update_thread = threading.Thread(target=lambda: get_latest_cpu_stats())
-    update_thread.start()
+    cpu_update_thread = threading.Thread(target=lambda: get_latest_cpu_stats())
+    mem_update_thread = threading.Thread(target=lambda: get_latest_mem_stats())
+    net_update_thread = threading.Thread(target=lambda: get_latest_net_stats())
+    cpu_update_thread.start()
+    mem_update_thread.start()
+    net_update_thread.start()
 
     # Delete/Create Webhooks
     logger.info("start web server")
