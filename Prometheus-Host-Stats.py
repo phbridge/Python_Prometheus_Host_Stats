@@ -37,19 +37,8 @@ import signal                           # catches SIGTERM and SIGINT
 from datetime import timedelta          # calculate x time ago
 from datetime import datetime           # timestamps mostly
 from multiprocessing import Manager     # variables between processes dict
-
-# import psutil                           # for CPU stats
-# import io                               # sending images only
-# import json                             # building json DB/ parsing stuff
-# import os
-# import time
 import sys                              # for error to catch and debug
 import traceback                        # helps add more logging infomation
-# from multiprocessing import Pool        # trying to run in parallel rather than in sequence
-# import requests                         # fetching updates
-# from flask import send_file             # Send Word Cloud via Flask
-# from flask import request               # Flask website requester details
-# from webexteamssdk import WebexTeamsAPI # gets and posts messages
 
 import credentials                      # imports static values
 
@@ -63,11 +52,9 @@ LOGFILE = credentials.LOGFILE
 THREAD_TO_BREAK = threading.Event()
 
 multiprocessing_manager = Manager()
-# NETWORKS_JSON = multiprocessing_manager.dict({})
 MEMORY_DATA = multiprocessing_manager.dict({})
 NETWORK_DATA = multiprocessing_manager.dict({})
 CPU_DATA_LIST = multiprocessing_manager.list()
-# MAX_THREADS = 3
 
 flask_app = Flask(__name__)
 
@@ -78,7 +65,7 @@ def cpu_five_seconds_interval(interval=5):
     response_string = ""
     try:
         for cpu_name in CPU_DATA_LIST[0]:
-            function_logger.info(cpu_name)
+            function_logger.debug(cpu_name)
             cpu_user_last = CPU_DATA_LIST[0][cpu_name]["user"]
             cpu_nice_last = CPU_DATA_LIST[0][cpu_name]["nice"]
             cpu_system_last = CPU_DATA_LIST[0][cpu_name]["system"]
@@ -89,7 +76,6 @@ def cpu_five_seconds_interval(interval=5):
             cpu_steal_last = CPU_DATA_LIST[0][cpu_name]["steal"]
             cpu_guest_last = CPU_DATA_LIST[0][cpu_name]["guest"]
             cpu_guest_nice_last = CPU_DATA_LIST[0][cpu_name]["guest_nice"]
-
             response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "user", "0", cpu_user_last)
             response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "nice", "0", cpu_nice_last)
             response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "system", "0", cpu_system_last)
@@ -100,8 +86,6 @@ def cpu_five_seconds_interval(interval=5):
             response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "steal", "0", cpu_steal_last)
             response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "guest", "0", cpu_guest_last)
             response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "guest_nice", "0", cpu_guest_nice_last)
-
-
             cpu_user = CPU_DATA_LIST[1][cpu_name]["user"] - CPU_DATA_LIST[0][cpu_name]["user"]
             cpu_nice = CPU_DATA_LIST[1][cpu_name]["nice"] - CPU_DATA_LIST[0][cpu_name]["nice"]
             cpu_system = CPU_DATA_LIST[1][cpu_name]["system"] - CPU_DATA_LIST[0][cpu_name]["system"]
@@ -112,9 +96,7 @@ def cpu_five_seconds_interval(interval=5):
             cpu_steal = CPU_DATA_LIST[1][cpu_name]["steal"] - CPU_DATA_LIST[0][cpu_name]["steal"]
             cpu_guest = CPU_DATA_LIST[1][cpu_name]["guest"] - CPU_DATA_LIST[0][cpu_name]["guest"]
             cpu_guest_nice = CPU_DATA_LIST[1][cpu_name]["guest_nice"] - CPU_DATA_LIST[0][cpu_name]["guest_nice"]
-
             cpu_total = cpu_user + cpu_nice + cpu_system + cpu_idle + cpu_iowait + cpu_irq + cpu_softirq + cpu_steal + cpu_guest + cpu_guest_nice
-
             cpu_user_pc = round(cpu_user / cpu_total, 3)
             cpu_nice_pc = round(cpu_nice / cpu_total, 3)
             cpu_system_pc = round(cpu_system / cpu_total, 3)
@@ -125,7 +107,6 @@ def cpu_five_seconds_interval(interval=5):
             cpu_steal_pc = round(cpu_steal / cpu_total, 3)
             cpu_guest_pc = round(cpu_guest / cpu_total, 3)
             cpu_guest_nice_pc = round(cpu_guest_nice / cpu_total, 3)
-
             response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "user", interval, cpu_user)
             response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "nice", interval, cpu_nice)
             response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "system", interval, cpu_system)
@@ -136,8 +117,6 @@ def cpu_five_seconds_interval(interval=5):
             response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "steal", interval, cpu_steal)
             response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "guest", interval, cpu_guest)
             response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "guest_nice", interval, cpu_guest_nice)
-
-
             response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "user", interval, cpu_user_pc)
             response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "nice", interval, cpu_nice_pc)
             response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "system", interval, cpu_system_pc)
@@ -148,7 +127,6 @@ def cpu_five_seconds_interval(interval=5):
             response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "steal", interval, cpu_steal_pc)
             response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "guest", interval, cpu_guest_pc)
             response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "guest_nice", interval, cpu_guest_nice_pc)
-
     except Exception as e:
         function_logger.error("something went bad with 5 second stats")
         function_logger.error("Unexpected error:" + str(sys.exc_info()[0]))
@@ -163,7 +141,7 @@ def cpu_fifteen_seconds_interval(interval=15):
     response_string = ""
     try:
         for cpu_name in CPU_DATA_LIST[0]:
-            function_logger.info(cpu_name)
+            function_logger.debug(cpu_name)
             cpu_user = CPU_DATA_LIST[3][cpu_name]["user"] - CPU_DATA_LIST[0][cpu_name]["user"]
             cpu_nice = CPU_DATA_LIST[3][cpu_name]["nice"] - CPU_DATA_LIST[0][cpu_name]["nice"]
             cpu_system = CPU_DATA_LIST[3][cpu_name]["system"] - CPU_DATA_LIST[0][cpu_name]["system"]
@@ -185,7 +163,6 @@ def cpu_fifteen_seconds_interval(interval=15):
             cpu_steal_pc = round(cpu_steal / cpu_total, 3)
             cpu_guest_pc = round(cpu_guest / cpu_total, 3)
             cpu_guest_nice_pc = round(cpu_guest_nice / cpu_total, 3)
-
             response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "user", interval, cpu_user)
             response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "nice", interval, cpu_nice)
             response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "system", interval, cpu_system)
@@ -196,7 +173,6 @@ def cpu_fifteen_seconds_interval(interval=15):
             response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "steal", interval, cpu_steal)
             response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "guest", interval, cpu_guest)
             response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "guest_nice", interval, cpu_guest_nice)
-
             response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "user", interval, cpu_user_pc)
             response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "nice", interval, cpu_nice_pc)
             response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "system", interval, cpu_system_pc)
@@ -207,7 +183,6 @@ def cpu_fifteen_seconds_interval(interval=15):
             response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "steal", interval, cpu_steal_pc)
             response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "guest", interval, cpu_guest_pc)
             response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "guest_nice", interval, cpu_guest_nice_pc)
-
     except Exception as e:
         function_logger.error("something went bad with 5 second stats")
         function_logger.error("Unexpected error:" + str(sys.exc_info()[0]))
@@ -222,7 +197,7 @@ def cpu_one_min_interval(interval=60):
     response_string = ""
     try:
         for cpu_name in CPU_DATA_LIST[0]:
-            function_logger.info(cpu_name)
+            function_logger.debug(cpu_name)
             cpu_user = CPU_DATA_LIST[12][cpu_name]["user"] - CPU_DATA_LIST[0][cpu_name]["user"]
             cpu_nice = CPU_DATA_LIST[12][cpu_name]["nice"] - CPU_DATA_LIST[0][cpu_name]["nice"]
             cpu_system = CPU_DATA_LIST[12][cpu_name]["system"] - CPU_DATA_LIST[0][cpu_name]["system"]
@@ -244,7 +219,6 @@ def cpu_one_min_interval(interval=60):
             cpu_steal_pc = round(cpu_steal / cpu_total, 3)
             cpu_guest_pc = round(cpu_guest / cpu_total, 3)
             cpu_guest_nice_pc = round(cpu_guest_nice / cpu_total, 3)
-
             response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "user", interval, cpu_user)
             response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "nice", interval, cpu_nice)
             response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "system", interval, cpu_system)
@@ -255,7 +229,6 @@ def cpu_one_min_interval(interval=60):
             response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "steal", interval, cpu_steal)
             response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "guest", interval, cpu_guest)
             response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "guest_nice", interval, cpu_guest_nice)
-
             response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "user", interval, cpu_user_pc)
             response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "nice", interval, cpu_nice_pc)
             response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "system", interval, cpu_system_pc)
@@ -266,17 +239,12 @@ def cpu_one_min_interval(interval=60):
             response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "steal", interval, cpu_steal_pc)
             response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "guest", interval, cpu_guest_pc)
             response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "guest_nice", interval, cpu_guest_nice_pc)
-
     except Exception as e:
         function_logger.error("something went bad with 5 second stats")
         function_logger.error("Unexpected error:" + str(sys.exc_info()[0]))
         function_logger.error("Unexpected error:" + str(e))
         function_logger.error("TRACEBACK=" + str(traceback.format_exc()))
     return response_string
-
-
-def five_min_interval(interval=300):
-    print("nothing")
 
 
 def get_latest_cpu_stats():
@@ -286,11 +254,11 @@ def get_latest_cpu_stats():
         t = datetime.today()
         future = datetime(t.year, t.month, t.day, t.hour, t.minute, t.second)
         future += timedelta(seconds=5)
-        function_logger.info("sleeping for %s seconds" % (future - t).seconds)
+        function_logger.debug("sleeping for %s seconds" % (future - t).seconds)
         THREAD_TO_BREAK.wait((future - t).seconds)
         if THREAD_TO_BREAK.is_set():
             return
-        function_logger.info("opening cpu file")
+        function_logger.debug("opening cpu file")
         with open("/proc/stat") as cpufile:
             cpu_scrape = {}
             for cpuline in cpufile.readlines():
@@ -315,7 +283,6 @@ def get_latest_cpu_stats():
             function_logger.debug(cpu_scrape)
             global CPU_DATA_LIST
             CPU_DATA_LIST.append(cpu_scrape)
-            # CPU_DATA_LIST = CPU_DATA_LIST[-120:]
             CPU_DATA_LIST = CPU_DATA_LIST[-3:]
             function_logger.debug(CPU_DATA_LIST)
 
@@ -327,17 +294,15 @@ def get_latest_mem_stats():
         t = datetime.today()
         future = datetime(t.year, t.month, t.day, t.hour, t.minute, t.second)
         future += timedelta(seconds=5)
-        function_logger.info("sleeping for %s seconds" % (future - t).seconds)
+        function_logger.debug("sleeping for %s seconds" % (future - t).seconds)
         THREAD_TO_BREAK.wait((future - t).seconds)
         if THREAD_TO_BREAK.is_set():
             return
-        function_logger.info("opening mem file")
+        function_logger.debug("opening mem file")
         global MEMORY_DATA
         with open("/proc/meminfo") as memfile:
             for memline in memfile.readlines():
-                # function_logger.info(memline)
                 line = memline.split()
-                # function_logger.info(line)
                 if "SwapTotal" in line[0]:
                     MEMORY_DATA["SwapTotal"] = line[1]
                 elif "SwapFree" in line[0]:
@@ -356,7 +321,7 @@ def get_latest_mem_stats():
                     MEMORY_DATA["Active"] = line[1]
                 elif "Inactive" in line[0]:
                     MEMORY_DATA["Inactive"] = line[1]
-        function_logger.info(MEMORY_DATA)
+        function_logger.debug(MEMORY_DATA)
 
 
 def get_latest_net_stats():
@@ -366,19 +331,17 @@ def get_latest_net_stats():
         t = datetime.today()
         future = datetime(t.year, t.month, t.day, t.hour, t.minute, t.second)
         future += timedelta(seconds=5)
-        function_logger.info("sleeping for %s seconds" % (future - t).seconds)
+        function_logger.debug("sleeping for %s seconds" % (future - t).seconds)
         THREAD_TO_BREAK.wait((future - t).seconds)
         if THREAD_TO_BREAK.is_set():
             return
-        function_logger.info("opening net file")
+        function_logger.debug("opening net file")
         global NETWORK_DATA
         with open("/proc/net/dev") as netfile:
             network_scrape = {}
             for netline in netfile.readlines():
-                function_logger.info(netline)
                 if "Inter" not in netline and "face" not in netline:
                     line = netline.split()
-                    function_logger.info(line)
                     interface_name = line[0].strip(":")
                     # NOTE done in a strange way because the of nested dictionary multiprocessing bug
                     NETWORK_DATA[interface_name] = {}
@@ -404,9 +367,10 @@ def get_latest_net_stats():
 @flask_app.route('/cpu_metrics')
 def cpu_metrics():
     function_logger = logger.getChild("%s.%s.%s" % (inspect.stack()[2][3], inspect.stack()[1][3], inspect.stack()[0][3]))
-    function_logger.info("metrics")
+    function_logger.info("cpu_metrics")
     return_string = ""
     return_string += cpu_five_seconds_interval()
+    # removed this as should be grabbed by influx/prom
     # return_string += cpu_fifteen_seconds_interval()
     # return_string += cpu_one_min_interval()
     # return_string += five_min_interval()
@@ -416,7 +380,7 @@ def cpu_metrics():
 @flask_app.route('/memory_metrics')
 def memory_metrics():
     function_logger = logger.getChild("%s.%s.%s" % (inspect.stack()[2][3], inspect.stack()[1][3], inspect.stack()[0][3]))
-    function_logger.info("metrics")
+    function_logger.info("memory_metrics")
     return_string = ""
     return_string += 'MemoryUsage{host="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, "SwapTotal", MEMORY_DATA["SwapTotal"])
     return_string += 'MemoryUsage{host="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, "SwapFree", MEMORY_DATA["SwapFree"])
@@ -433,12 +397,9 @@ def memory_metrics():
 @flask_app.route('/network_metrics')
 def network_metrics():
     function_logger = logger.getChild("%s.%s.%s" % (inspect.stack()[2][3], inspect.stack()[1][3], inspect.stack()[0][3]))
-    function_logger.info("metrics")
+    function_logger.info("network_metrics")
     return_string = ""
     for each in NETWORK_DATA.keys():
-        function_logger.info(NETWORK_DATA)
-        function_logger.info(each)
-        function_logger.info(NETWORK_DATA[each])
         return_string += 'NetworkStats{host="%s",interface="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, each, "R_bytes", NETWORK_DATA[each]["R_bytes"])
         return_string += 'NetworkStats{host="%s",interface="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, each, "R_packets", NETWORK_DATA[each]["R_packets"])
         return_string += 'NetworkStats{host="%s",interface="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, each, "R_errs", NETWORK_DATA[each]["R_errs"])
