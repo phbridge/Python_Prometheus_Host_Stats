@@ -168,9 +168,9 @@ def get_latest_cpu_stats():
                 function_logger.debug(cpuline)
                 cputimes = cpuline.split()
                 cpu_scrape = {}
-                function_logger.info(cputimes)
+                function_logger.debug(cputimes)
                 if "cpu" in cputimes[0]:
-                    function_logger.info(cputimes)
+                    function_logger.debug(cputimes)
                     cpu_scrape[cputimes[0]] = {}
                     cpu_scrape[cputimes[0]]['cpu_name'] = cputimes[0]
                     cpu_scrape[cputimes[0]]['user'] = int(cputimes[1])
