@@ -180,11 +180,11 @@ def get_latest_cpu_stats():
                 cpu_scrape[cputimes[0]]['guest'] = int(cputimes[9])
                 cpu_scrape[cputimes[0]]['guest_nice'] = int(cputimes[10])
 
-            print(cpu_scrape)
+            function_logger.info(cpu_scrape)
             global CPU_DATA_LIST
             CPU_DATA_LIST.append(cpu_scrape)
             CPU_DATA_LIST = CPU_DATA_LIST[-120:]
-            print(CPU_DATA_LIST)
+            function_logger.info(CPU_DATA_LIST)
 #
         # response_string += "CPUUsage{cpu=%s, host=%s, measurement=%s,interval=%s} %s" % (cputimes[0], FLASK_HOST, "user", interval, cputimes[1])
         # response_string += "CPUUsage{cpu=%s, host=%s, measurement=%s interval=%s} %s" % (cputimes[0], FLASK_HOST, "nice", interval, cputimes[2])
