@@ -374,8 +374,8 @@ def get_latest_net_stats():
         global NETWORK_DATA
         with open("/proc/net/dev") as netfile:
             for netline in netfile.readlines():
-                function_logger.info(line)
-                if "Inter" or "face" not in netline:
+                function_logger.info(netline)
+                if ("Inter" or "face") not in netline:
                     line = netline.split()
                     function_logger.info(line)
                     interface_name = line[0].strip(":")
