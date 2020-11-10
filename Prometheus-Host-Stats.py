@@ -379,6 +379,7 @@ def get_latest_net_stats():
                     line = netline.split()
                     function_logger.info(line)
                     interface_name = line[0].strip(":")
+                    NETWORK_DATA[interface_name] = {}
                     NETWORK_DATA[interface_name]["R_bytes"] = line[1]
                     NETWORK_DATA[interface_name]["R_packets"] = line[2]
                     NETWORK_DATA[interface_name]["R_errs"] = line[3]
