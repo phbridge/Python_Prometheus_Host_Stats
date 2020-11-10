@@ -90,16 +90,16 @@ def five_seconds_interval(interval=5):
             cpu_guest = CPU_DATA_LIST[1][cpu_name]["guest"] - CPU_DATA_LIST[0][cpu_name]["guest"]
             cpu_guest_nice = CPU_DATA_LIST[1][cpu_name]["guest_nice"] - CPU_DATA_LIST[0][cpu_name]["guest_nice"]
             cpu_total = cpu_user + cpu_nice + cpu_system + cpu_idle + cpu_iowait + cpu_irq + cpu_softirq + cpu_steal + cpu_guest + cpu_guest_nice
-            cpu_user_pc = cpu_user / cpu_total
-            cpu_nice_pc = cpu_nice / cpu_total
-            cpu_system_pc = cpu_system / cpu_total
-            cpu_idle_pc = cpu_idle / cpu_total
-            cpu_iowait_pc = cpu_iowait / cpu_total
-            cpu_irq_pc = cpu_irq / cpu_total
-            cpu_softirq_pc = cpu_softirq / cpu_total
-            cpu_steal_pc = cpu_steal / cpu_total
-            cpu_guest_pc = cpu_guest / cpu_total
-            cpu_guest_nice_pc = cpu_guest_nice / cpu_total
+            cpu_user_pc = round(cpu_user / cpu_total)
+            cpu_nice_pc = round(cpu_nice / cpu_total)
+            cpu_system_pc = round(cpu_system / cpu_total)
+            cpu_idle_pc = round(cpu_idle / cpu_total)
+            cpu_iowait_pc = round(cpu_iowait / cpu_total)
+            cpu_irq_pc = round(cpu_irq / cpu_total)
+            cpu_softirq_pc = round(cpu_softirq / cpu_total)
+            cpu_steal_pc = round(cpu_steal / cpu_total)
+            cpu_guest_pc = round(cpu_guest / cpu_total)
+            cpu_guest_nice_pc = round(cpu_guest_nice / cpu_total)
 
             response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "user", interval, cpu_user)
             response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "nice", interval, cpu_nice)
@@ -149,16 +149,16 @@ def fifteen_seconds_interval(interval=15):
             cpu_guest = CPU_DATA_LIST[3][cpu_name]["guest"] - CPU_DATA_LIST[0][cpu_name]["guest"]
             cpu_guest_nice = CPU_DATA_LIST[3][cpu_name]["guest_nice"] - CPU_DATA_LIST[0][cpu_name]["guest_nice"]
             cpu_total = cpu_user + cpu_nice + cpu_system + cpu_idle + cpu_iowait + cpu_irq + cpu_softirq + cpu_steal + cpu_guest + cpu_guest_nice
-            cpu_user_pc = cpu_user / cpu_total
-            cpu_nice_pc = cpu_nice / cpu_total
-            cpu_system_pc = cpu_system / cpu_total
-            cpu_idle_pc = cpu_idle / cpu_total
-            cpu_iowait_pc = cpu_iowait / cpu_total
-            cpu_irq_pc = cpu_irq / cpu_total
-            cpu_softirq_pc = cpu_softirq / cpu_total
-            cpu_steal_pc = cpu_steal / cpu_total
-            cpu_guest_pc = cpu_guest / cpu_total
-            cpu_guest_nice_pc = cpu_guest_nice / cpu_total
+            cpu_user_pc = round(cpu_user / cpu_total)
+            cpu_nice_pc = round(cpu_nice / cpu_total)
+            cpu_system_pc = round(cpu_system / cpu_total)
+            cpu_idle_pc = round(cpu_idle / cpu_total)
+            cpu_iowait_pc = round(cpu_iowait / cpu_total)
+            cpu_irq_pc = round(cpu_irq / cpu_total)
+            cpu_softirq_pc = round(cpu_softirq / cpu_total)
+            cpu_steal_pc = round(cpu_steal / cpu_total)
+            cpu_guest_pc = round(cpu_guest / cpu_total)
+            cpu_guest_nice_pc = round(cpu_guest_nice / cpu_total)
 
             response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "user", interval, cpu_user)
             response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "nice", interval, cpu_nice)
@@ -208,16 +208,16 @@ def one_min_interval(interval=60):
             cpu_guest = CPU_DATA_LIST[12][cpu_name]["guest"] - CPU_DATA_LIST[0][cpu_name]["guest"]
             cpu_guest_nice = CPU_DATA_LIST[12][cpu_name]["guest_nice"] - CPU_DATA_LIST[0][cpu_name]["guest_nice"]
             cpu_total = cpu_user + cpu_nice + cpu_system + cpu_idle + cpu_iowait + cpu_irq + cpu_softirq + cpu_steal + cpu_guest + cpu_guest_nice
-            cpu_user_pc = cpu_user / cpu_total
-            cpu_nice_pc = cpu_nice / cpu_total
-            cpu_system_pc = cpu_system / cpu_total
-            cpu_idle_pc = cpu_idle / cpu_total
-            cpu_iowait_pc = cpu_iowait / cpu_total
-            cpu_irq_pc = cpu_irq / cpu_total
-            cpu_softirq_pc = cpu_softirq / cpu_total
-            cpu_steal_pc = cpu_steal / cpu_total
-            cpu_guest_pc = cpu_guest / cpu_total
-            cpu_guest_nice_pc = cpu_guest_nice / cpu_total
+            cpu_user_pc = round(cpu_user / cpu_total)
+            cpu_nice_pc = round(cpu_nice / cpu_total)
+            cpu_system_pc = round(cpu_system / cpu_total)
+            cpu_idle_pc = round(cpu_idle / cpu_total)
+            cpu_iowait_pc = round(cpu_iowait / cpu_total)
+            cpu_irq_pc = round(cpu_irq / cpu_total)
+            cpu_softirq_pc = round(cpu_softirq / cpu_total)
+            cpu_steal_pc = round(cpu_steal / cpu_total)
+            cpu_guest_pc = round(cpu_guest / cpu_total)
+            cpu_guest_nice_pc = round(cpu_guest_nice / cpu_total)
 
             response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "user", interval, cpu_user)
             response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "nice", interval, cpu_nice)
@@ -272,7 +272,7 @@ def get_latest_cpu_stats():
                 cputimes = cpuline.split()
                 function_logger.debug(cputimes)
                 if "cpu" in cputimes[0]:
-                    function_logger.info(cputimes)
+                    function_logger.debug(cputimes)
                     cpu_scrape[cputimes[0]] = {}
                     cpu_scrape[cputimes[0]]['cpu_name'] = cputimes[0]
                     cpu_scrape[cputimes[0]]['user'] = int(cputimes[1])
@@ -286,11 +286,11 @@ def get_latest_cpu_stats():
                     cpu_scrape[cputimes[0]]['guest'] = int(cputimes[9])
                     cpu_scrape[cputimes[0]]['guest_nice'] = int(cputimes[10])
 
-            function_logger.info(cpu_scrape)
+            function_logger.debug(cpu_scrape)
             global CPU_DATA_LIST
             CPU_DATA_LIST.append(cpu_scrape)
             CPU_DATA_LIST = CPU_DATA_LIST[-120:]
-            function_logger.info(CPU_DATA_LIST)
+            function_logger.debug(CPU_DATA_LIST)
 #
         # response_string += "CPUUsage{cpu=%s, host=%s, measurement=%s,interval=%s} %s" % (cputimes[0], FLASK_HOST, "user", interval, cputimes[1])
         # response_string += "CPUUsage{cpu=%s, host=%s, measurement=%s interval=%s} %s" % (cputimes[0], FLASK_HOST, "nice", interval, cputimes[2])
