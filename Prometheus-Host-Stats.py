@@ -373,29 +373,32 @@ def get_latest_net_stats():
         function_logger.info("opening net file")
         global NETWORK_DATA
         with open("/proc/net/dev") as netfile:
+            network_scrape = {}
             for netline in netfile.readlines():
                 function_logger.info(netline)
                 if "Inter" not in netline and "face" not in netline:
                     line = netline.split()
                     function_logger.info(line)
                     interface_name = line[0].strip(":")
+                    # NOTE done in a strange way because the of nested dictionary multiprocessing bug
                     NETWORK_DATA[interface_name] = {}
-                    NETWORK_DATA[interface_name]["R_bytes"] = line[1]
-                    NETWORK_DATA[interface_name]["R_packets"] = line[2]
-                    NETWORK_DATA[interface_name]["R_errs"] = line[3]
-                    NETWORK_DATA[interface_name]["R_drop"] = line[4]
-                    NETWORK_DATA[interface_name]["R_fifo"] = line[5]
-                    NETWORK_DATA[interface_name]["R_frame"] = line[6]
-                    NETWORK_DATA[interface_name]["R_compressed"] = line[7]
-                    NETWORK_DATA[interface_name]["R_multicast"] = line[8]
-                    NETWORK_DATA[interface_name]["T_bytes"] = line[9]
-                    NETWORK_DATA[interface_name]["T_packets"] = line[10]
-                    NETWORK_DATA[interface_name]["T_errs"] = line[11]
-                    NETWORK_DATA[interface_name]["T_drop"] = line[12]
-                    NETWORK_DATA[interface_name]["T_fifo"] = line[13]
-                    NETWORK_DATA[interface_name]["T_colls"] = line[14]
-                    NETWORK_DATA[interface_name]["T_carrier"] = line[15]
-                    NETWORK_DATA[interface_name]["T_compressed"] = line[16]
+                    network_scrape["R_bytes"] = line[1]
+                    network_scrape["R_packets"] = line[2]
+                    network_scrape["R_errs"] = line[3]
+                    network_scrape["R_drop"] = line[4]
+                    network_scrape["R_fifo"] = line[5]
+                    network_scrape["R_frame"] = line[6]
+                    network_scrape["R_compressed"] = line[7]
+                    network_scrape["R_multicast"] = line[8]
+                    network_scrape["T_bytes"] = line[9]
+                    network_scrape["T_packets"] = line[10]
+                    network_scrape["T_errs"] = line[11]
+                    network_scrape["T_drop"] = line[12]
+                    network_scrape["T_fifo"] = line[13]
+                    network_scrape["T_colls"] = line[14]
+                    network_scrape["T_carrier"] = line[15]
+                    network_scrape["T_compressed"] = line[16]
+                    NETWORK_DATA[interface_name] = network_scrape
 
 
 @flask_app.route('/cpu_metrics')
