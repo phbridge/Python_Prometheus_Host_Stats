@@ -433,6 +433,7 @@ def network_metrics():
     function_logger.info("metrics")
     return_string = ""
     for each in NETWORK_DATA.keys():
+        function_logger.info(each)
         return_string += 'NetworkStats{host="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, "R_bytes", NETWORK_DATA[each]["R_bytes"])
         return_string += 'NetworkStats{host="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, "R_packets", NETWORK_DATA[each]["R_packets"])
         return_string += 'NetworkStats{host="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, "R_errs", NETWORK_DATA[each]["R_errs"])
