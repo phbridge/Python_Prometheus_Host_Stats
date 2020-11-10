@@ -166,7 +166,9 @@ def get_latest_cpu_stats():
         with open("/proc/stat") as cpufile:
             cputimes = cpufile.readline().split()
             cpu_scrape = {}
+            function_logger.info(cputimes[0])
             if "cpu" in cputimes[0]:
+                function_logger.info(cputimes[0])
                 cpu_scrape[cputimes[0]] = {}
                 cpu_scrape[cputimes[0]]['cpu_name'] = cputimes[0]
                 cpu_scrape[cputimes[0]]['user'] = int(cputimes[1])
