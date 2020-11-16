@@ -76,6 +76,17 @@ def cpu_five_seconds_interval(interval=5):
             cpu_steal_last = CPU_DATA_LIST[0][cpu_name]["steal"]
             cpu_guest_last = CPU_DATA_LIST[0][cpu_name]["guest"]
             cpu_guest_nice_last = CPU_DATA_LIST[0][cpu_name]["guest_nice"]
+            cpu_total = cpu_user_last + cpu_nice_last + cpu_system_last + cpu_idle_last + cpu_iowait_last + cpu_irq_last + cpu_softirq_last + cpu_steal_last + cpu_guest_last + cpu_guest_nice_last
+            cpu_user_pc = round(cpu_user_last / cpu_total, 3)
+            cpu_nice_pc = round(cpu_nice_last / cpu_total, 3)
+            cpu_system_pc = round(cpu_system_last / cpu_total, 3)
+            cpu_idle_pc = round(cpu_idle_last / cpu_total, 3)
+            cpu_iowait_pc = round(cpu_iowait_last / cpu_total, 3)
+            cpu_irq_pc = round(cpu_irq_last / cpu_total, 3)
+            cpu_softirq_pc = round(cpu_softirq_last / cpu_total, 3)
+            cpu_steal_pc = round(cpu_steal_last / cpu_total, 3)
+            cpu_guest_pc = round(cpu_guest_last / cpu_total, 3)
+            cpu_guest_nice_pc = round(cpu_guest_nice_last / cpu_total, 3)
             response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "user", "0", cpu_user_last)
             response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "nice", "0", cpu_nice_last)
             response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "system", "0", cpu_system_last)
@@ -86,6 +97,17 @@ def cpu_five_seconds_interval(interval=5):
             response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "steal", "0", cpu_steal_last)
             response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "guest", "0", cpu_guest_last)
             response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "guest_nice", "0", cpu_guest_nice_last)
+            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "user", "0", cpu_user_pc)
+            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "nice", "0", cpu_nice_pc)
+            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "system", "0", cpu_system_pc)
+            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "idle", "0", cpu_idle_pc)
+            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "iowait", "0", cpu_iowait_pc)
+            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "irq", "0", cpu_irq_pc)
+            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "softirq", "0", cpu_softirq_pc)
+            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "steal", "0", cpu_steal_pc)
+            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "guest", "0", cpu_guest_pc)
+            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "guest_nice", "0", cpu_guest_nice_pc)
+
             cpu_user = CPU_DATA_LIST[1][cpu_name]["user"] - CPU_DATA_LIST[0][cpu_name]["user"]
             cpu_nice = CPU_DATA_LIST[1][cpu_name]["nice"] - CPU_DATA_LIST[0][cpu_name]["nice"]
             cpu_system = CPU_DATA_LIST[1][cpu_name]["system"] - CPU_DATA_LIST[0][cpu_name]["system"]
@@ -184,67 +206,67 @@ def cpu_fifteen_seconds_interval(interval=15):
             response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "guest", interval, cpu_guest_pc)
             response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "guest_nice", interval, cpu_guest_nice_pc)
     except Exception as e:
-        function_logger.error("something went bad with 5 second stats")
+        function_logger.error("something went bad with 15 second stats")
         function_logger.error("Unexpected error:" + str(sys.exc_info()[0]))
         function_logger.error("Unexpected error:" + str(e))
         function_logger.error("TRACEBACK=" + str(traceback.format_exc()))
     return response_string
 
 
-def cpu_one_min_interval(interval=60):
-    function_logger = logger.getChild("%s.%s.%s" % (inspect.stack()[2][3], inspect.stack()[1][3], inspect.stack()[0][3]))
-    function_logger.info("one_min_interval")
-    response_string = ""
-    try:
-        for cpu_name in CPU_DATA_LIST[0]:
-            function_logger.debug(cpu_name)
-            cpu_user = CPU_DATA_LIST[12][cpu_name]["user"] - CPU_DATA_LIST[0][cpu_name]["user"]
-            cpu_nice = CPU_DATA_LIST[12][cpu_name]["nice"] - CPU_DATA_LIST[0][cpu_name]["nice"]
-            cpu_system = CPU_DATA_LIST[12][cpu_name]["system"] - CPU_DATA_LIST[0][cpu_name]["system"]
-            cpu_idle = CPU_DATA_LIST[12][cpu_name]["idle"] - CPU_DATA_LIST[0][cpu_name]["idle"]
-            cpu_iowait = CPU_DATA_LIST[12][cpu_name]["iowait"] - CPU_DATA_LIST[0][cpu_name]["iowait"]
-            cpu_irq = CPU_DATA_LIST[12][cpu_name]["irq"] - CPU_DATA_LIST[0][cpu_name]["irq"]
-            cpu_softirq = CPU_DATA_LIST[12][cpu_name]["softirq"] - CPU_DATA_LIST[0][cpu_name]["softirq"]
-            cpu_steal = CPU_DATA_LIST[12][cpu_name]["steal"] - CPU_DATA_LIST[0][cpu_name]["steal"]
-            cpu_guest = CPU_DATA_LIST[12][cpu_name]["guest"] - CPU_DATA_LIST[0][cpu_name]["guest"]
-            cpu_guest_nice = CPU_DATA_LIST[12][cpu_name]["guest_nice"] - CPU_DATA_LIST[0][cpu_name]["guest_nice"]
-            cpu_total = cpu_user + cpu_nice + cpu_system + cpu_idle + cpu_iowait + cpu_irq + cpu_softirq + cpu_steal + cpu_guest + cpu_guest_nice
-            cpu_user_pc = round(cpu_user / cpu_total, 3)
-            cpu_nice_pc = round(cpu_nice / cpu_total, 3)
-            cpu_system_pc = round(cpu_system / cpu_total, 3)
-            cpu_idle_pc = round(cpu_idle / cpu_total, 3)
-            cpu_iowait_pc = round(cpu_iowait / cpu_total, 3)
-            cpu_irq_pc = round(cpu_irq / cpu_total, 3)
-            cpu_softirq_pc = round(cpu_softirq / cpu_total, 3)
-            cpu_steal_pc = round(cpu_steal / cpu_total, 3)
-            cpu_guest_pc = round(cpu_guest / cpu_total, 3)
-            cpu_guest_nice_pc = round(cpu_guest_nice / cpu_total, 3)
-            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "user", interval, cpu_user)
-            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "nice", interval, cpu_nice)
-            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "system", interval, cpu_system)
-            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "idle", interval, cpu_idle)
-            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "iowait", interval, cpu_iowait)
-            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "irq", interval, cpu_irq)
-            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "softirq", interval, cpu_softirq)
-            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "steal", interval, cpu_steal)
-            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "guest", interval, cpu_guest)
-            response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "guest_nice", interval, cpu_guest_nice)
-            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "user", interval, cpu_user_pc)
-            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "nice", interval, cpu_nice_pc)
-            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "system", interval, cpu_system_pc)
-            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "idle", interval, cpu_idle_pc)
-            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "iowait", interval, cpu_iowait_pc)
-            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "irq", interval, cpu_irq_pc)
-            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "softirq", interval, cpu_softirq_pc)
-            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "steal", interval, cpu_steal_pc)
-            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "guest", interval, cpu_guest_pc)
-            response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "guest_nice", interval, cpu_guest_nice_pc)
-    except Exception as e:
-        function_logger.error("something went bad with 5 second stats")
-        function_logger.error("Unexpected error:" + str(sys.exc_info()[0]))
-        function_logger.error("Unexpected error:" + str(e))
-        function_logger.error("TRACEBACK=" + str(traceback.format_exc()))
-    return response_string
+# def cpu_one_min_interval(interval=60):
+#     function_logger = logger.getChild("%s.%s.%s" % (inspect.stack()[2][3], inspect.stack()[1][3], inspect.stack()[0][3]))
+#     function_logger.info("one_min_interval")
+#     response_string = ""
+#     try:
+#         for cpu_name in CPU_DATA_LIST[0]:
+#             function_logger.debug(cpu_name)
+#             cpu_user = CPU_DATA_LIST[12][cpu_name]["user"] - CPU_DATA_LIST[0][cpu_name]["user"]
+#             cpu_nice = CPU_DATA_LIST[12][cpu_name]["nice"] - CPU_DATA_LIST[0][cpu_name]["nice"]
+#             cpu_system = CPU_DATA_LIST[12][cpu_name]["system"] - CPU_DATA_LIST[0][cpu_name]["system"]
+#             cpu_idle = CPU_DATA_LIST[12][cpu_name]["idle"] - CPU_DATA_LIST[0][cpu_name]["idle"]
+#             cpu_iowait = CPU_DATA_LIST[12][cpu_name]["iowait"] - CPU_DATA_LIST[0][cpu_name]["iowait"]
+#             cpu_irq = CPU_DATA_LIST[12][cpu_name]["irq"] - CPU_DATA_LIST[0][cpu_name]["irq"]
+#             cpu_softirq = CPU_DATA_LIST[12][cpu_name]["softirq"] - CPU_DATA_LIST[0][cpu_name]["softirq"]
+#             cpu_steal = CPU_DATA_LIST[12][cpu_name]["steal"] - CPU_DATA_LIST[0][cpu_name]["steal"]
+#             cpu_guest = CPU_DATA_LIST[12][cpu_name]["guest"] - CPU_DATA_LIST[0][cpu_name]["guest"]
+#             cpu_guest_nice = CPU_DATA_LIST[12][cpu_name]["guest_nice"] - CPU_DATA_LIST[0][cpu_name]["guest_nice"]
+#             cpu_total = cpu_user + cpu_nice + cpu_system + cpu_idle + cpu_iowait + cpu_irq + cpu_softirq + cpu_steal + cpu_guest + cpu_guest_nice
+#             cpu_user_pc = round(cpu_user / cpu_total, 3)
+#             cpu_nice_pc = round(cpu_nice / cpu_total, 3)
+#             cpu_system_pc = round(cpu_system / cpu_total, 3)
+#             cpu_idle_pc = round(cpu_idle / cpu_total, 3)
+#             cpu_iowait_pc = round(cpu_iowait / cpu_total, 3)
+#             cpu_irq_pc = round(cpu_irq / cpu_total, 3)
+#             cpu_softirq_pc = round(cpu_softirq / cpu_total, 3)
+#             cpu_steal_pc = round(cpu_steal / cpu_total, 3)
+#             cpu_guest_pc = round(cpu_guest / cpu_total, 3)
+#             cpu_guest_nice_pc = round(cpu_guest_nice / cpu_total, 3)
+#             response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "user", interval, cpu_user)
+#             response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "nice", interval, cpu_nice)
+#             response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "system", interval, cpu_system)
+#             response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "idle", interval, cpu_idle)
+#             response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "iowait", interval, cpu_iowait)
+#             response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "irq", interval, cpu_irq)
+#             response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "softirq", interval, cpu_softirq)
+#             response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "steal", interval, cpu_steal)
+#             response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "guest", interval, cpu_guest)
+#             response_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "guest_nice", interval, cpu_guest_nice)
+#             response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "user", interval, cpu_user_pc)
+#             response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "nice", interval, cpu_nice_pc)
+#             response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "system", interval, cpu_system_pc)
+#             response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "idle", interval, cpu_idle_pc)
+#             response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "iowait", interval, cpu_iowait_pc)
+#             response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "irq", interval, cpu_irq_pc)
+#             response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "softirq", interval, cpu_softirq_pc)
+#             response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "steal", interval, cpu_steal_pc)
+#             response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "guest", interval, cpu_guest_pc)
+#             response_string += 'CPUUsage_pc{cpu="%s",host="%s",measurement="%s",interval=%s} %s \n' % (cpu_name, FLASK_HOSTNAME, "guest_nice", interval, cpu_guest_nice_pc)
+#     except Exception as e:
+#         function_logger.error("something went bad with 5 second stats")
+#         function_logger.error("Unexpected error:" + str(sys.exc_info()[0]))
+#         function_logger.error("Unexpected error:" + str(e))
+#         function_logger.error("TRACEBACK=" + str(traceback.format_exc()))
+#     return response_string
 
 
 def get_latest_cpu_stats():
@@ -279,7 +301,6 @@ def get_latest_cpu_stats():
                     cpu_scrape[cputimes[0]]['steal'] = int(cputimes[8])
                     cpu_scrape[cputimes[0]]['guest'] = int(cputimes[9])
                     cpu_scrape[cputimes[0]]['guest_nice'] = int(cputimes[10])
-
             function_logger.debug(cpu_scrape)
             global CPU_DATA_LIST
             CPU_DATA_LIST.append(cpu_scrape)
@@ -287,81 +308,81 @@ def get_latest_cpu_stats():
             function_logger.debug(CPU_DATA_LIST)
 
 
-def get_latest_mem_stats():
-    function_logger = logger.getChild("%s.%s.%s" % (inspect.stack()[2][3], inspect.stack()[1][3], inspect.stack()[0][3]))
-    function_logger.info("get_latest_mem_stats")
-    while not THREAD_TO_BREAK.is_set():
-        t = datetime.today()
-        future = datetime(t.year, t.month, t.day, t.hour, t.minute, t.second)
-        future += timedelta(seconds=5)
-        function_logger.debug("sleeping for %s seconds" % (future - t).seconds)
-        THREAD_TO_BREAK.wait((future - t).seconds)
-        if THREAD_TO_BREAK.is_set():
-            return
-        function_logger.debug("opening mem file")
-        global MEMORY_DATA
-        with open("/proc/meminfo") as memfile:
-            for memline in memfile.readlines():
-                line = memline.split()
-                if "SwapTotal" in line[0]:
-                    MEMORY_DATA["SwapTotal"] = line[1]
-                elif "SwapFree" in line[0]:
-                    MEMORY_DATA["SwapFree"] = line[1]
-                elif "MemTotal" in line[0]:
-                    MEMORY_DATA["MemTotal"] = line[1]
-                elif "MemFree" in line[0]:
-                    MEMORY_DATA["MemFree"] = line[1]
-                elif "MemAvailable" in line[0]:
-                    MEMORY_DATA["MemAvailable"] = line[1]
-                elif "Buffers" in line[0]:
-                    MEMORY_DATA["Buffers"] = line[1]
-                elif "Cached" in line[0]:
-                    MEMORY_DATA["Cached"] = line[1]
-                elif "Active" in line[0]:
-                    MEMORY_DATA["Active"] = line[1]
-                elif "Inactive" in line[0]:
-                    MEMORY_DATA["Inactive"] = line[1]
-        function_logger.debug(MEMORY_DATA)
+# def get_latest_mem_stats():
+#     function_logger = logger.getChild("%s.%s.%s" % (inspect.stack()[2][3], inspect.stack()[1][3], inspect.stack()[0][3]))
+#     function_logger.info("get_latest_mem_stats")
+#     while not THREAD_TO_BREAK.is_set():
+#         t = datetime.today()
+#         future = datetime(t.year, t.month, t.day, t.hour, t.minute, t.second)
+#         future += timedelta(seconds=5)
+#         function_logger.debug("sleeping for %s seconds" % (future - t).seconds)
+#         THREAD_TO_BREAK.wait((future - t).seconds)
+#         if THREAD_TO_BREAK.is_set():
+#             return
+#         function_logger.debug("opening mem file")
+#         global MEMORY_DATA
+#         with open("/proc/meminfo") as memfile:
+#             for memline in memfile.readlines():
+#                 line = memline.split()
+#                 if "SwapTotal" in line[0]:
+#                     MEMORY_DATA["SwapTotal"] = line[1]
+#                 elif "SwapFree" in line[0]:
+#                     MEMORY_DATA["SwapFree"] = line[1]
+#                 elif "MemTotal" in line[0]:
+#                     MEMORY_DATA["MemTotal"] = line[1]
+#                 elif "MemFree" in line[0]:
+#                     MEMORY_DATA["MemFree"] = line[1]
+#                 elif "MemAvailable" in line[0]:
+#                     MEMORY_DATA["MemAvailable"] = line[1]
+#                 elif "Buffers" in line[0]:
+#                     MEMORY_DATA["Buffers"] = line[1]
+#                 elif "Cached" in line[0]:
+#                     MEMORY_DATA["Cached"] = line[1]
+#                 elif "Active" in line[0]:
+#                     MEMORY_DATA["Active"] = line[1]
+#                 elif "Inactive" in line[0]:
+#                     MEMORY_DATA["Inactive"] = line[1]
+#         function_logger.debug(MEMORY_DATA)
 
 
-def get_latest_net_stats():
-    function_logger = logger.getChild("%s.%s.%s" % (inspect.stack()[2][3], inspect.stack()[1][3], inspect.stack()[0][3]))
-    function_logger.info("get_latest_net_stats")
-    while not THREAD_TO_BREAK.is_set():
-        t = datetime.today()
-        future = datetime(t.year, t.month, t.day, t.hour, t.minute, t.second)
-        future += timedelta(seconds=5)
-        function_logger.debug("sleeping for %s seconds" % (future - t).seconds)
-        THREAD_TO_BREAK.wait((future - t).seconds)
-        if THREAD_TO_BREAK.is_set():
-            return
-        function_logger.debug("opening net file")
-        global NETWORK_DATA
-        with open("/proc/net/dev") as netfile:
-            network_scrape = {}
-            for netline in netfile.readlines():
-                if "Inter" not in netline and "face" not in netline:
-                    line = netline.split()
-                    interface_name = line[0].strip(":")
-                    # NOTE done in a strange way because the of nested dictionary multiprocessing bug
-                    NETWORK_DATA[interface_name] = {}
-                    network_scrape["R_bytes"] = line[1]
-                    network_scrape["R_packets"] = line[2]
-                    network_scrape["R_errs"] = line[3]
-                    network_scrape["R_drop"] = line[4]
-                    network_scrape["R_fifo"] = line[5]
-                    network_scrape["R_frame"] = line[6]
-                    network_scrape["R_compressed"] = line[7]
-                    network_scrape["R_multicast"] = line[8]
-                    network_scrape["T_bytes"] = line[9]
-                    network_scrape["T_packets"] = line[10]
-                    network_scrape["T_errs"] = line[11]
-                    network_scrape["T_drop"] = line[12]
-                    network_scrape["T_fifo"] = line[13]
-                    network_scrape["T_colls"] = line[14]
-                    network_scrape["T_carrier"] = line[15]
-                    network_scrape["T_compressed"] = line[16]
-                    NETWORK_DATA[interface_name] = network_scrape
+# def get_latest_net_stats():
+#     function_logger = logger.getChild("%s.%s.%s" % (inspect.stack()[2][3], inspect.stack()[1][3], inspect.stack()[0][3]))
+#     function_logger.info("get_latest_net_stats")
+#     while not THREAD_TO_BREAK.is_set():
+#         t = datetime.today()
+#         future = datetime(t.year, t.month, t.day, t.hour, t.minute, t.second)
+#         future += timedelta(seconds=5)
+#         function_logger.debug("sleeping for %s seconds" % (future - t).seconds)
+#         THREAD_TO_BREAK.wait((future - t).seconds)
+#         if THREAD_TO_BREAK.is_set():
+#             return
+#         function_logger.debug("opening net file")
+#         global NETWORK_DATA
+#         with open("/proc/net/dev") as netfile:
+#             network_scrape = {}
+#             for netline in netfile.readlines():
+#                 if "Inter" not in netline and "face" not in netline:
+#                     line = netline.split()
+#                     interface_name = line[0].strip(":")
+#                     # NOTE done in a strange way because the of nested dictionary multiprocessing bug
+#                     NETWORK_DATA[interface_name] = {}
+#                     network_scrape["R_bytes"] = line[1]
+#                     network_scrape["R_packets"] = line[2]
+#                     network_scrape["R_errs"] = line[3]
+#                     network_scrape["R_drop"] = line[4]
+#                     network_scrape["R_fifo"] = line[5]
+#                     network_scrape["R_frame"] = line[6]
+#                     network_scrape["R_compressed"] = line[7]
+#                     network_scrape["R_multicast"] = line[8]
+#                     network_scrape["T_bytes"] = line[9]
+#                     network_scrape["T_packets"] = line[10]
+#                     network_scrape["T_errs"] = line[11]
+#                     network_scrape["T_drop"] = line[12]
+#                     network_scrape["T_fifo"] = line[13]
+#                     network_scrape["T_colls"] = line[14]
+#                     network_scrape["T_carrier"] = line[15]
+#                     network_scrape["T_compressed"] = line[16]
+#                     NETWORK_DATA[interface_name] = network_scrape
 
 
 @flask_app.route('/cpu_metrics')
@@ -371,7 +392,7 @@ def cpu_metrics():
     return_string = ""
     return_string += cpu_five_seconds_interval()
     # removed this as should be grabbed by influx/prom
-    # return_string += cpu_fifteen_seconds_interval()
+    return_string += cpu_fifteen_seconds_interval()
     # return_string += cpu_one_min_interval()
     # return_string += five_min_interval()
     return Response(return_string, mimetype='text/plain')
@@ -381,6 +402,27 @@ def cpu_metrics():
 def memory_metrics():
     function_logger = logger.getChild("%s.%s.%s" % (inspect.stack()[2][3], inspect.stack()[1][3], inspect.stack()[0][3]))
     function_logger.info("memory_metrics")
+    with open("/proc/meminfo") as memfile:
+        for memline in memfile.readlines():
+            line = memline.split()
+            if "SwapTotal" in line[0]:
+                MEMORY_DATA["SwapTotal"] = line[1]
+            elif "SwapFree" in line[0]:
+                MEMORY_DATA["SwapFree"] = line[1]
+            elif "MemTotal" in line[0]:
+                MEMORY_DATA["MemTotal"] = line[1]
+            elif "MemFree" in line[0]:
+                MEMORY_DATA["MemFree"] = line[1]
+            elif "MemAvailable" in line[0]:
+                MEMORY_DATA["MemAvailable"] = line[1]
+            elif "Buffers" in line[0]:
+                MEMORY_DATA["Buffers"] = line[1]
+            elif "Cached" in line[0]:
+                MEMORY_DATA["Cached"] = line[1]
+            elif "Active" in line[0]:
+                MEMORY_DATA["Active"] = line[1]
+            elif "Inactive" in line[0]:
+                MEMORY_DATA["Inactive"] = line[1]
     return_string = ""
     return_string += 'MemoryUsage{host="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, "SwapTotal", MEMORY_DATA["SwapTotal"])
     return_string += 'MemoryUsage{host="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, "SwapFree", MEMORY_DATA["SwapFree"])
@@ -398,6 +440,30 @@ def memory_metrics():
 def network_metrics():
     function_logger = logger.getChild("%s.%s.%s" % (inspect.stack()[2][3], inspect.stack()[1][3], inspect.stack()[0][3]))
     function_logger.info("network_metrics")
+    with open("/proc/net/dev") as netfile:
+        network_scrape = {}
+        for netline in netfile.readlines():
+            if "Inter" not in netline and "face" not in netline:
+                line = netline.split()
+                interface_name = line[0].strip(":")
+                NETWORK_DATA[interface_name] = {}
+                network_scrape["R_bytes"] = line[1]
+                network_scrape["R_packets"] = line[2]
+                network_scrape["R_errs"] = line[3]
+                network_scrape["R_drop"] = line[4]
+                network_scrape["R_fifo"] = line[5]
+                network_scrape["R_frame"] = line[6]
+                network_scrape["R_compressed"] = line[7]
+                network_scrape["R_multicast"] = line[8]
+                network_scrape["T_bytes"] = line[9]
+                network_scrape["T_packets"] = line[10]
+                network_scrape["T_errs"] = line[11]
+                network_scrape["T_drop"] = line[12]
+                network_scrape["T_fifo"] = line[13]
+                network_scrape["T_colls"] = line[14]
+                network_scrape["T_carrier"] = line[15]
+                network_scrape["T_compressed"] = line[16]
+                NETWORK_DATA[interface_name] = network_scrape
     return_string = ""
     for each in NETWORK_DATA.keys():
         return_string += 'NetworkStats{host="%s",interface="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, each, "R_bytes", NETWORK_DATA[each]["R_bytes"])
@@ -426,8 +492,8 @@ def graceful_killer(signal_number, frame):
     THREAD_TO_BREAK.set()
     function_logger.info("set thread to break")
     cpu_update_thread.join()
-    mem_update_thread.join()
-    net_update_thread.join()
+    # mem_update_thread.join()
+    # net_update_thread.join()
     function_logger.info("joined auto_update_thread thread")
     http_server.stop()
     function_logger.info("stopped HTTP server")
@@ -465,11 +531,11 @@ if __name__ == "__main__":
     # Start the cron type jobs
     logger.info("start the cron auto update thread")
     cpu_update_thread = threading.Thread(target=lambda: get_latest_cpu_stats())
-    mem_update_thread = threading.Thread(target=lambda: get_latest_mem_stats())
-    net_update_thread = threading.Thread(target=lambda: get_latest_net_stats())
+    # mem_update_thread = threading.Thread(target=lambda: get_latest_mem_stats())
+    # net_update_thread = threading.Thread(target=lambda: get_latest_net_stats())
     cpu_update_thread.start()
-    mem_update_thread.start()
-    net_update_thread.start()
+    # mem_update_thread.start()
+    # net_update_thread.start()
 
     # Delete/Create Webhooks
     logger.info("start web server")
