@@ -8,6 +8,8 @@ Python 3.5+
 This is designed to be an easy way to collect host stats using prometheus scrape as if your are scraping for other stuff
 nice and easy to also scrape for this. I got fed up of the different ways telegraf and prometheus reported stuff making
 comparisons and graphing on a single page hard work.
+If you want to monitor some basic host stats from the hose its self that from other source this is a quick easy way to
+add this. I am amazed someone has not done it already but a quick search returned fruitless.
 
 # Contacts
 Phil Bridges - phbridge@cisco.com
