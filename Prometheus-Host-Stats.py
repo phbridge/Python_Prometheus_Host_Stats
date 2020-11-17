@@ -409,6 +409,8 @@ def memory_metrics():
                 MEMORY_DATA["SwapTotal"] = line[1]
             elif "SwapFree" in line[0]:
                 MEMORY_DATA["SwapFree"] = line[1]
+            elif "SwapCached" in line[0]:
+                MEMORY_DATA["SwapCached"] = line[1]
             elif "MemTotal" in line[0]:
                 MEMORY_DATA["MemTotal"] = line[1]
             elif "MemFree" in line[0]:
@@ -426,6 +428,7 @@ def memory_metrics():
     return_string = ""
     return_string += 'MemoryUsage{host="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, "SwapTotal", MEMORY_DATA["SwapTotal"])
     return_string += 'MemoryUsage{host="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, "SwapFree", MEMORY_DATA["SwapFree"])
+    return_string += 'MemoryUsage{host="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, "SwapCached", MEMORY_DATA["SwapCached"])
     return_string += 'MemoryUsage{host="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, "MemTotal", MEMORY_DATA["MemTotal"])
     return_string += 'MemoryUsage{host="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, "MemFree", MEMORY_DATA["MemFree"])
     return_string += 'MemoryUsage{host="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, "MemAvailable", MEMORY_DATA["MemAvailable"])
