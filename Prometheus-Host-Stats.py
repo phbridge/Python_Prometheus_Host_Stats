@@ -429,6 +429,7 @@ def memory_metrics():
     return_string += 'MemoryUsage{host="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, "SwapTotal", MEMORY_DATA["SwapTotal"])
     return_string += 'MemoryUsage{host="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, "SwapFree", MEMORY_DATA["SwapFree"])
     return_string += 'MemoryUsage{host="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, "SwapCached", MEMORY_DATA["SwapCached"])
+    return_string += 'MemoryUsage{host="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, "SwapUsed", MEMORY_DATA["SwapTotal"] - MEMORY_DATA["SwapFree"])
     return_string += 'MemoryUsage{host="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, "MemTotal", MEMORY_DATA["MemTotal"])
     return_string += 'MemoryUsage{host="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, "MemFree", MEMORY_DATA["MemFree"])
     return_string += 'MemoryUsage{host="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, "MemAvailable", MEMORY_DATA["MemAvailable"])
