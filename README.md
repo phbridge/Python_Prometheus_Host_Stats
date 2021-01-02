@@ -11,6 +11,8 @@ comparisons and graphing on a single page hard work.
 If you want to monitor some basic host stats from the hose its self that from other source this is a quick easy way to
 add this. I am amazed someone has not done it already but a quick search returned fruitless.
 
+I should probably mention this uses proc/XYZ for grabbing the stats so will only work on OS's that have the proc files :-)
+
 # Contacts
 Phil Bridges - phbridge@cisco.com
 
