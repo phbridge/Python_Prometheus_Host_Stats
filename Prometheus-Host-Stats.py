@@ -247,7 +247,7 @@ def get_latest_cpu_stats():
             function_logger.debug(cpu_scrape)
             global CPU_DATA_LIST
             CPU_DATA_LIST.append(cpu_scrape)
-            CPU_DATA_LIST = CPU_DATA_LIST[-3:]
+            CPU_DATA_LIST = CPU_DATA_LIST[-4:]  # keep last 3/4 results for summary over 5/15 seconds
             function_logger.debug(CPU_DATA_LIST)
 
 
