@@ -364,10 +364,10 @@ def disk_metrics():
         if element[0] == "Filesystem":
             continue
         else:
-            return_string += 'DiskStats{host="%s",filesystem="%s",measurement=%s} %s \n' % (FLASK_HOSTNAME, element[0], "total", element[1][:-1])
-            return_string += 'DiskStats{host="%s",filesystem="%s",measurement=%s} %s \n' % (FLASK_HOSTNAME, element[0], "used", element[2][:-1])
-            return_string += 'DiskStats{host="%s",filesystem="%s",measurement=%s} %s \n' % (FLASK_HOSTNAME, element[0], "avaliable", element[3][:-1])
-            return_string += 'DiskStats{host="%s",filesystem="%s",measurement=%s} %s \n' % (FLASK_HOSTNAME, element[0], "pc", element[4][:-1])
+            return_string += 'DiskStats{host="%s",filesystem="%s",measurement=%s} %s \n' % (FLASK_HOSTNAME, element[0].replace("/", "\/"), "total", element[1][:-1])
+            return_string += 'DiskStats{host="%s",filesystem="%s",measurement=%s} %s \n' % (FLASK_HOSTNAME, element[0].replace("/", "\/"), "used", element[2][:-1])
+            return_string += 'DiskStats{host="%s",filesystem="%s",measurement=%s} %s \n' % (FLASK_HOSTNAME, element[0].replace("/", "\/"), "avaliable", element[3][:-1])
+            return_string += 'DiskStats{host="%s",filesystem="%s",measurement=%s} %s \n' % (FLASK_HOSTNAME, element[0].replace("/", "\/"), "pc", element[4][:-1])
     return Response(return_string, mimetype='text/plain')
 
 
