@@ -39,6 +39,7 @@ from datetime import datetime           # timestamps mostly
 from multiprocessing import Manager     # variables between processes dict
 import sys                              # for error to catch and debug
 import traceback                        # helps add more logging infomation
+import subprocess
 
 import credentials                      # imports static values
 
@@ -349,6 +350,24 @@ def network_metrics():
         return_string += 'NetworkStats{host="%s",interface="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, each, "T_colls", NETWORK_DATA[each]["T_colls"])
         return_string += 'NetworkStats{host="%s",interface="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, each, "T_carrier", NETWORK_DATA[each]["T_carrier"])
         return_string += 'NetworkStats{host="%s",interface="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, each, "T_compressed", NETWORK_DATA[each]["T_compressed"])
+    return Response(return_string, mimetype='text/plain')
+
+
+@flask_app.route('/disk_metrics')
+def disk_metrics():
+    function_logger = logger.getChild("%s.%s.%s" % (inspect.stack()[2][3], inspect.stack()[1][3], inspect.stack()[0][3]))
+    function_logger.info("disk_metrics")
+    return_string = ""
+    output = subprocess.check_output(['df', '-BM'], stderr=subprocess.STDOUT).decode("utf-8")
+    for line in output.splitlines():
+        element = line.split()
+        if element[0] == "Filesystem":
+            continue
+        else:
+            return_string += 'DiskStats{host="%s",filesystem="%s",measurement=%s} %s \n' % (FLASK_HOSTNAME, element[0], "total", element[1][:-1])
+            return_string += 'DiskStats{host="%s",filesystem="%s",measurement=%s} %s \n' % (FLASK_HOSTNAME, element[0], "used", element[2][:-1])
+            return_string += 'DiskStats{host="%s",filesystem="%s",measurement=%s} %s \n' % (FLASK_HOSTNAME, element[0], "avaliable", element[3][:-1])
+            return_string += 'DiskStats{host="%s",filesystem="%s",measurement=%s} %s \n' % (FLASK_HOSTNAME, element[0], "pc", element[4][:-1])
     return Response(return_string, mimetype='text/plain')
 
 
