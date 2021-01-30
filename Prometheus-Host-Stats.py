@@ -422,6 +422,8 @@ def cpu_metrics_data(influx=False):
 
 
 def cpu_metrics_thread():
+    function_logger = logger.getChild("%s.%s.%s" % (inspect.stack()[2][3], inspect.stack()[1][3], inspect.stack()[0][3]))
+    function_logger.info("cpu_metrics_thread")
     THREAD_TO_BREAK.wait(30)  # wait here to avoid getting errors on start
     historical_upload = ""
     while not THREAD_TO_BREAK.is_set():
@@ -434,10 +436,12 @@ def cpu_metrics_thread():
         for each in influx_upload.splitlines():
             to_send += each + " " + timestamp_string + "\n"
         if not historical_upload == "":
+            function_logger.info("adding history to upload")
             to_send += historical_upload
         if update_influx(to_send):
             historical_upload = ""
         else:
+            function_logger.info("adding to history")
             historical_upload += influx_upload
         time_to_sleep = (future - datetime.now()).seconds
         if 30 > time_to_sleep > 0:
@@ -496,6 +500,8 @@ def memory_metrics_data(influx=False):
 
 
 def memory_metrics_thread():
+    function_logger = logger.getChild("%s.%s.%s" % (inspect.stack()[2][3], inspect.stack()[1][3], inspect.stack()[0][3]))
+    function_logger.info("memory_metrics_thread")
     historical_upload = ""
     while not THREAD_TO_BREAK.is_set():
         now = datetime.now()
@@ -507,10 +513,12 @@ def memory_metrics_thread():
         for each in influx_upload.splitlines():
             to_send += each + " " + timestamp_string + "\n"
         if not historical_upload == "":
+            function_logger.info("adding history to upload")
             to_send += historical_upload
         if update_influx(to_send):
             historical_upload = ""
         else:
+            function_logger.info("adding to history")
             historical_upload += influx_upload
         time_to_sleep = (future - datetime.now()).seconds
         if 30 > time_to_sleep > 0:
@@ -578,6 +586,8 @@ def pressure_metrics_data(influx=False):
 
 
 def pressure_metrics_thread():
+    function_logger = logger.getChild("%s.%s.%s" % (inspect.stack()[2][3], inspect.stack()[1][3], inspect.stack()[0][3]))
+    function_logger.info("pressure_metrics_thread")
     historical_upload = ""
     while not THREAD_TO_BREAK.is_set():
         now = datetime.now()
@@ -589,10 +599,12 @@ def pressure_metrics_thread():
         for each in influx_upload.splitlines():
             to_send += each + " " + timestamp_string + "\n"
         if not historical_upload == "":
+            function_logger.info("adding history to upload")
             to_send += historical_upload
         if update_influx(to_send):
             historical_upload = ""
         else:
+            function_logger.info("adding to history")
             historical_upload += influx_upload
         time_to_sleep = (future - datetime.now()).seconds
         if 30 > time_to_sleep > 0:
@@ -634,6 +646,8 @@ def pi_metrics_data(influx=False):
 
 
 def pi_metrics_thread():
+    function_logger = logger.getChild("%s.%s.%s" % (inspect.stack()[2][3], inspect.stack()[1][3], inspect.stack()[0][3]))
+    function_logger.info("pi_metrics_thread")
     historical_upload = ""
     while not THREAD_TO_BREAK.is_set():
         now = datetime.now()
@@ -645,10 +659,12 @@ def pi_metrics_thread():
         for each in influx_upload.splitlines():
             to_send += each + " " + timestamp_string + "\n"
         if not historical_upload == "":
+            function_logger.info("adding history to upload")
             to_send += historical_upload
         if update_influx(to_send):
             historical_upload = ""
         else:
+            function_logger.info("adding to history")
             historical_upload += influx_upload
         time_to_sleep = (future - datetime.now()).seconds
         if 30 > time_to_sleep > 0:
@@ -757,6 +773,8 @@ def network_metrics_data(influx=False):
 
 
 def network_metrics_thread():
+    function_logger = logger.getChild("%s.%s.%s" % (inspect.stack()[2][3], inspect.stack()[1][3], inspect.stack()[0][3]))
+    function_logger.info("network_metrics_thread")
     historical_upload = ""
     while not THREAD_TO_BREAK.is_set():
         now = datetime.now()
@@ -768,10 +786,12 @@ def network_metrics_thread():
         for each in influx_upload.splitlines():
             to_send += each + " " + timestamp_string + "\n"
         if not historical_upload == "":
+            function_logger.info("adding history to upload")
             to_send += historical_upload
         if update_influx(to_send):
             historical_upload = ""
         else:
+            function_logger.info("adding to history")
             historical_upload += influx_upload
         time_to_sleep = (future - datetime.now()).seconds
         if 30 > time_to_sleep > 0:
