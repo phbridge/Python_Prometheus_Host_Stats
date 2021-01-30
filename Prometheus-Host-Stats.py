@@ -946,6 +946,8 @@ def disk_metrics_thread():
         future = now + timedelta(seconds=30)
         influx_upload = ""
         influx_upload += disk_metrics_data(influx=True)
+        function_logger.info("influx_upload")
+        function_logger.info(influx_upload)
         to_send = ""
         for each in influx_upload.splitlines():
             to_send += each + " " + timestamp_string + "\n"
@@ -956,6 +958,7 @@ def disk_metrics_thread():
         function_logger.info(to_send)
         #
         if update_influx(to_send):
+            function_logger.info("reset history")
             historical_upload = ""
         else:
             historical_upload += influx_upload
@@ -983,6 +986,7 @@ def update_influx(raw_string, timestamp=None):
                 try:
                     upload_to_influx_sessions_response = upload_to_influx_sessions.post(url=influx_url, data=string_to_upload, timeout=(2, 1))
                     if upload_to_influx_sessions_response.status_code == 204:
+                        function_logger.info("content=%s" % upload_to_influx_sessions_response.content)
                         success = True
                     else:
                         attempts += 1
