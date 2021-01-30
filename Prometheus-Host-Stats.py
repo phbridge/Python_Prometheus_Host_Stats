@@ -48,7 +48,6 @@ import requests
 import credentials                      # imports static values
 
 FLASK_HOSTNAME = credentials.FLASK_HOSTNAME
-# TARGET_URL = "http://" + FLASK_HOSTNAME + ":" + str(FLASK_PORT) + "/"
 ABSOLUTE_PATH = credentials.ABSOLUTE_PATH
 LOGFILE = credentials.LOGFILE
 INFLUX_DB_Path = credentials.INFLUX_DB_PATH
@@ -265,8 +264,6 @@ def cpu_metrics():
     function_logger = logger.getChild("%s.%s.%s" % (inspect.stack()[2][3], inspect.stack()[1][3], inspect.stack()[0][3]))
     function_logger.info("cpu_metrics")
     return_string = cpu_metrics_data()
-    # return_string += cpu_five_seconds_interval()
-    # return_string += cpu_fifteen_seconds_interval()
     return Response(return_string, mimetype='text/plain')
 
 
@@ -425,16 +422,7 @@ def cpu_metrics_data(influx=False):
 
 
 def cpu_metrics_thread():
-    THREAD_TO_BREAK.wait(25) # wait here to avoid getting
-    # while not THREAD_TO_BREAK.is_set():
-    #     now = datetime.now()
-    #     future = now + timedelta(seconds=15)
-    #     influx_upload = ""
-    #     influx_upload += cpu_metrics_data(influx=True)
-    #     update_influx(influx_upload, now)
-    #     time_to_sleep = (future - datetime.now()).seconds
-    #     if 30 > time_to_sleep > 0:
-    #         THREAD_TO_BREAK.wait(time_to_sleep)
+    THREAD_TO_BREAK.wait(15)  # wait here to avoid getting errors on start
     historical_upload = ""
     while not THREAD_TO_BREAK.is_set():
         now = datetime.now()
@@ -460,41 +448,7 @@ def cpu_metrics_thread():
 def memory_metrics():
     function_logger = logger.getChild("%s.%s.%s" % (inspect.stack()[2][3], inspect.stack()[1][3], inspect.stack()[0][3]))
     function_logger.info("memory_metrics")
-    # with open("/proc/meminfo") as memfile:
-    #     for memline in memfile.readlines():
-    #         line = memline.split()
-    #         if "SwapTotal" in line[0]:
-    #             MEMORY_DATA["SwapTotal"] = line[1]
-    #         elif "SwapFree" in line[0]:
-    #             MEMORY_DATA["SwapFree"] = line[1]
-    #         elif "SwapCached" in line[0]:
-    #             MEMORY_DATA["SwapCached"] = line[1]
-    #         elif "MemTotal" in line[0]:
-    #             MEMORY_DATA["MemTotal"] = line[1]
-    #         elif "MemFree" in line[0]:
-    #             MEMORY_DATA["MemFree"] = line[1]
-    #         elif "MemAvailable" in line[0]:
-    #             MEMORY_DATA["MemAvailable"] = line[1]
-    #         elif "Buffers" in line[0]:
-    #             MEMORY_DATA["Buffers"] = line[1]
-    #         elif "Cached" in line[0]:
-    #             MEMORY_DATA["Cached"] = line[1]
-    #         elif "Active" in line[0]:
-    #             MEMORY_DATA["Active"] = line[1]
-    #         elif "Inactive" in line[0]:
-    #             MEMORY_DATA["Inactive"] = line[1]
     return_string = memory_metrics_data()
-    # return_string += 'MemoryUsage{host="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, "SwapTotal", MEMORY_DATA["SwapTotal"])
-    # return_string += 'MemoryUsage{host="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, "SwapFree", MEMORY_DATA["SwapFree"])
-    # return_string += 'MemoryUsage{host="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, "SwapCached", MEMORY_DATA["SwapCached"])
-    # return_string += 'MemoryUsage{host="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, "SwapUsed", int(MEMORY_DATA["SwapTotal"]) - int(MEMORY_DATA["SwapFree"]))
-    # return_string += 'MemoryUsage{host="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, "MemTotal", MEMORY_DATA["MemTotal"])
-    # return_string += 'MemoryUsage{host="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, "MemFree", MEMORY_DATA["MemFree"])
-    # return_string += 'MemoryUsage{host="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, "MemAvailable", MEMORY_DATA["MemAvailable"])
-    # return_string += 'MemoryUsage{host="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, "Buffers", MEMORY_DATA["Buffers"])
-    # return_string += 'MemoryUsage{host="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, "Cached", MEMORY_DATA["Cached"])
-    # return_string += 'MemoryUsage{host="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, "Active", MEMORY_DATA["Active"])
-    # return_string += 'MemoryUsage{host="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, "Inactive", MEMORY_DATA["Inactive"])
     return Response(return_string, mimetype='text/plain')
 
 
@@ -542,15 +496,6 @@ def memory_metrics_data(influx=False):
 
 
 def memory_metrics_thread():
-    # while not THREAD_TO_BREAK.is_set():
-    #     now = datetime.now()
-    #     future = now + timedelta(seconds=30)
-    #     influx_upload = ""
-    #     influx_upload += memory_metrics_data(influx=True)
-    #     update_influx(influx_upload, now)
-    #     time_to_sleep = (future - datetime.now()).seconds
-    #     if 30 > time_to_sleep > 0:
-    #         THREAD_TO_BREAK.wait(time_to_sleep)
     historical_upload = ""
     while not THREAD_TO_BREAK.is_set():
         now = datetime.now()
@@ -577,33 +522,6 @@ def pressure_metrics():
     function_logger = logger.getChild("%s.%s.%s" % (inspect.stack()[2][3], inspect.stack()[1][3], inspect.stack()[0][3]))
     function_logger.info("pressure_metrics")
     return_string = pressure_metrics_data()
-    # with open("/proc/pressure/io") as io:
-    #     for ioline in io.readlines():
-    #         line = ioline.split()
-    #         if "some" in line[0]:
-    #             return_string += 'Pressure{host="%s",measurement="%s",time=%s,type="%s"} %s \n' % (FLASK_HOSTNAME, "IO", "10", "some", line[1].split("=")[1])
-    #             return_string += 'Pressure{host="%s",measurement="%s",time=%s,type="%s"} %s \n' % (FLASK_HOSTNAME, "IO", "60", "some", line[2].split("=")[1])
-    #         elif "full" in line[0]:
-    #             return_string += 'Pressure{host="%s",measurement="%s",time=%s,type="%s"} %s \n' % (FLASK_HOSTNAME, "IO", "10", "full", line[1].split("=")[1])
-    #             return_string += 'Pressure{host="%s",measurement="%s",time=%s,type="%s"} %s \n' % (FLASK_HOSTNAME, "IO", "60", "full", line[2].split("=")[1])
-    # with open("/proc/pressure/cpu") as cpu:
-    #     for cpuline in cpu.readlines():
-    #         line = cpuline.split()
-    #         if "some" in line[0]:
-    #             return_string += 'Pressure{host="%s",measurement="%s",time=%s,type="%s"} %s \n' % (FLASK_HOSTNAME, "CPU", "10", "some", line[1].split("=")[1])
-    #             return_string += 'Pressure{host="%s",measurement="%s",time=%s,type="%s"} %s \n' % (FLASK_HOSTNAME, "CPU", "60", "some", line[2].split("=")[1])
-    #         elif "full" in line[0]:
-    #             return_string += 'Pressure{host="%s",measurement="%s",time=%s,type="%s"} %s \n' % (FLASK_HOSTNAME, "CPU", "10", "full", line[1].split("=")[1])
-    #             return_string += 'Pressure{host="%s",measurement="%s",time=%s,type="%s"} %s \n' % (FLASK_HOSTNAME, "CPU", "60", "full", line[2].split("=")[1])
-    # with open("/proc/pressure/memory") as mem:
-    #     for memline in mem.readlines():
-    #         line = memline.split()
-    #         if "some" in line[0]:
-    #             return_string += 'Pressure{host="%s",measurement="%s",time=%s,type="%s"} %s \n' % (FLASK_HOSTNAME, "MEM", "10", "some", line[1].split("=")[1])
-    #             return_string += 'Pressure{host="%s",measurement="%s",time=%s,type="%s"} %s \n' % (FLASK_HOSTNAME, "MEM", "60", "some", line[2].split("=")[1])
-    #         elif "full" in line[0]:
-    #             return_string += 'Pressure{host="%s",measurement="%s",time=%s,type="%s"} %s \n' % (FLASK_HOSTNAME, "MEM", "10", "full", line[1].split("=")[1])
-    #             return_string += 'Pressure{host="%s",measurement="%s",time=%s,type="%s"} %s \n' % (FLASK_HOSTNAME, "MEM", "60", "full", line[2].split("=")[1])
     return Response(return_string, mimetype='text/plain')
 
 
@@ -645,7 +563,6 @@ def pressure_metrics_data(influx=False):
             if "some" in line[0]:
                 some_10 = line[1].split("=")[1]
                 some_60 = line[2].split("=")[1]
-
             elif "full" in line[0]:
                 full_10 = line[1].split("=")[1]
                 full_60 = line[2].split("=")[1]
@@ -661,15 +578,6 @@ def pressure_metrics_data(influx=False):
 
 
 def pressure_metrics_thread():
-    # while not THREAD_TO_BREAK.is_set():
-    #     now = datetime.now()
-    #     future = now + timedelta(seconds=30)
-    #     influx_upload = ""
-    #     influx_upload += pressure_metrics_data(influx=True)
-    #     update_influx(influx_upload, now)
-    #     time_to_sleep = (future - datetime.now()).seconds
-    #     if 30 > time_to_sleep > 0:
-    #         THREAD_TO_BREAK.wait(time_to_sleep)
     historical_upload = ""
     while not THREAD_TO_BREAK.is_set():
         now = datetime.now()
@@ -728,15 +636,6 @@ def pi_metrics_data(influx=False):
 
 
 def pi_metrics_thread():
-    # while not THREAD_TO_BREAK.is_set():
-    #     now = datetime.now()
-    #     future = now + timedelta(seconds=30)
-    #     influx_upload = ""
-    #     influx_upload += pi_metrics_data(influx=True)
-    #     update_influx(influx_upload, now)
-    #     time_to_sleep = (future - datetime.now()).seconds
-    #     if 30 > time_to_sleep > 0:
-    #         THREAD_TO_BREAK.wait(time_to_sleep)
     historical_upload = ""
     while not THREAD_TO_BREAK.is_set():
         now = datetime.now()
@@ -860,15 +759,6 @@ def network_metrics_data(influx=False):
 
 
 def network_metrics_thread():
-    # while not THREAD_TO_BREAK.is_set():
-    #     now = datetime.now()
-    #     future = now + timedelta(seconds=30)
-    #     influx_upload = ""
-    #     influx_upload += network_metrics_data(influx=True)
-    #     update_influx(influx_upload, now)
-    #     time_to_sleep = (future - datetime.now()).seconds
-    #     if 30 > time_to_sleep > 0:
-    #         THREAD_TO_BREAK.wait(time_to_sleep)
     historical_upload = ""
     while not THREAD_TO_BREAK.is_set():
         now = datetime.now()
@@ -929,15 +819,6 @@ def disk_metrics_data(influx=False):
 def disk_metrics_thread():
     function_logger = logger.getChild("%s.%s.%s" % (inspect.stack()[2][3], inspect.stack()[1][3], inspect.stack()[0][3]))
     function_logger.info("disk_metrics_thread")
-    # while not THREAD_TO_BREAK.is_set():
-    #     now = datetime.now()
-    #     future = now + timedelta(seconds=30)
-    #     influx_upload = ""
-    #     influx_upload += disk_metrics_data(influx=True)
-    #     update_influx(influx_upload, now)
-    #     time_to_sleep = (future - datetime.now()).seconds
-    #     if 30 > time_to_sleep > 0:
-    #         THREAD_TO_BREAK.wait(time_to_sleep)
     historical_upload = ""
     while not THREAD_TO_BREAK.is_set():
         now = datetime.now()
@@ -963,7 +844,7 @@ def disk_metrics_thread():
 
 def update_influx(raw_string, timestamp=None):
     function_logger = logger.getChild("%s.%s.%s" % (inspect.stack()[2][3], inspect.stack()[1][3], inspect.stack()[0][3]))
-    function_logger.info("update_influx")
+    function_logger.debug("update_influx")
     try:
         string_to_upload = ""
         if timestamp is not None:
