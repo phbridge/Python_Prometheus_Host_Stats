@@ -425,6 +425,7 @@ def cpu_metrics_data(influx=False):
 
 
 def cpu_metrics_thread():
+    THREAD_TO_BREAK.wait(25) # wait here to avoid getting
     # while not THREAD_TO_BREAK.is_set():
     #     now = datetime.now()
     #     future = now + timedelta(seconds=15)
@@ -960,8 +961,8 @@ def update_influx(raw_string, timestamp=None):
     function_logger = logger.getChild("%s.%s.%s" % (inspect.stack()[2][3], inspect.stack()[1][3], inspect.stack()[0][3]))
     try:
         string_to_upload = ""
-        timestamp_string = str(int(timestamp.timestamp()) * 1000000000)
         if timestamp is not None:
+            timestamp_string = str(int(timestamp.timestamp()) * 1000000000)
             for each in raw_string.splitlines():
                 string_to_upload += each + " " + timestamp_string + "\n"
         success_array = []
