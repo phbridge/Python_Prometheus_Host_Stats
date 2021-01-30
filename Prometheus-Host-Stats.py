@@ -975,9 +975,11 @@ def update_influx(raw_string, timestamp=None):
             while attempts < 5 and not success:
                 try:
                     upload_to_influx_sessions_response = upload_to_influx_sessions.post(url=influx_url, data=string_to_upload, timeout=(2, 1))
-                    function_logger.info("status_code=%s" % upload_to_influx_sessions_response.status_code)
-                    function_logger.info("status_code=%s" % upload_to_influx_sessions_response.text)
-                    success = True
+                    if upload_to_influx_sessions_response.status_code == 204:
+                        success = True
+                    else:
+                        function_logger.info("status_code=%s" % upload_to_influx_sessions_response.status_code)
+                        function_logger.info("status_code=%s" % upload_to_influx_sessions_response.content)
                 except requests.exceptions.ConnectTimeout as e:
                     attempts += 1
                     function_logger.debug("update_influx - attempted " + str(attempts) + " Failed Connection Timeout")
