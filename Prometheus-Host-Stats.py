@@ -63,10 +63,9 @@ MEMORY_DATA = multiprocessing_manager.dict({})
 NETWORK_DATA = multiprocessing_manager.dict({})
 CPU_DATA_LIST = multiprocessing_manager.list()
 
-if FLASK_MODE:
-    FLASK_HOST = credentials.FLASK_HOST
-    FLASK_PORT = credentials.FLASK_PORT
-    flask_app = Flask(__name__)
+FLASK_HOST = credentials.FLASK_HOST
+FLASK_PORT = credentials.FLASK_PORT
+flask_app = Flask(__name__)
 
 
 def cpu_five_seconds_interval(interval=5):
