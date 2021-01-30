@@ -1,5 +1,5 @@
 # Title
-Python Prometheus Host Stats
+Python Prometheus Host Stats (some RaspberryPi (Debain not Rasperian) specifics)
  
 # Language
 Python 3.5+
