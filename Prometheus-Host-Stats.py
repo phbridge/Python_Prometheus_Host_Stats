@@ -422,12 +422,12 @@ def cpu_metrics_data(influx=False):
 
 
 def cpu_metrics_thread():
-    THREAD_TO_BREAK.wait(15)  # wait here to avoid getting errors on start
+    THREAD_TO_BREAK.wait(30)  # wait here to avoid getting errors on start
     historical_upload = ""
     while not THREAD_TO_BREAK.is_set():
         now = datetime.now()
         timestamp_string = str(int(now.timestamp()) * 1000000000)
-        future = now + timedelta(seconds=30)
+        future = now + timedelta(seconds=15)
         influx_upload = ""
         influx_upload += cpu_metrics_data(influx=True)
         to_send = ""
