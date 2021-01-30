@@ -48,7 +48,7 @@ import requests
 import credentials                      # imports static values
 
 FLASK_HOSTNAME = credentials.FLASK_HOSTNAME
-TARGET_URL = "http://" + FLASK_HOSTNAME + ":" + str(FLASK_PORT) + "/"
+# TARGET_URL = "http://" + FLASK_HOSTNAME + ":" + str(FLASK_PORT) + "/"
 ABSOLUTE_PATH = credentials.ABSOLUTE_PATH
 LOGFILE = credentials.LOGFILE
 INFLUX_DB_Path = credentials.INFLUX_DB_PATH
