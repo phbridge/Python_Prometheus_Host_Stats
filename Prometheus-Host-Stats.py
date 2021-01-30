@@ -575,8 +575,8 @@ def pressure_metrics_data(influx=False):
                 full_10 = line[1].split("=")[1]
                 full_60 = line[2].split("=")[1]
         if influx:
-            return_string += 'Pressure,host=%s,type=%s,measurement=%s full10=%s,full60s=%s,some10=%s,some60s=%s \n' % (
-            FLASK_HOSTNAME, "full", "MEM", full_10, full_60, some_10, some_60)
+            return_string += 'Pressure,host=%s,measurement=%s full10=%s,full60s=%s,some10=%s,some60s=%s \n' % \
+                             (FLASK_HOSTNAME, "IO", full_10, full_60, some_10, some_60)
         else:
             return_string += 'Pressure{host="%s",measurement="%s",time=%s,type="%s"} %s \n' % (FLASK_HOSTNAME, "IO", "10", "full", full_10)
             return_string += 'Pressure{host="%s",measurement="%s",time=%s,type="%s"} %s \n' % (FLASK_HOSTNAME, "IO", "60", "full", full_60)
@@ -589,11 +589,11 @@ def pressure_metrics_data(influx=False):
                 some_10 = line[1].split("=")[1]
                 some_60 = line[2].split("=")[1]
         if influx:
-            return_string += 'Pressure,host=%s,type=%s,measurement=%s some10=%s,some60s=%s \n' % (
-            FLASK_HOSTNAME, "full", "MEM", some_10, some_60)
+            return_string += 'Pressure,host=%s,measurement=%s some10=%s,some60s=%s \n' % \
+                             (FLASK_HOSTNAME, "CPU", some_10, some_60)
         else:
-            return_string += 'Pressure{host="%s",measurement="%s",time=%s,type="%s"} %s \n' % (FLASK_HOSTNAME, "MEM", "10", "some", some_10)
-            return_string += 'Pressure{host="%s",measurement="%s",time=%s,type="%s"} %s \n' % (FLASK_HOSTNAME, "MEM", "60", "some", some_60)
+            return_string += 'Pressure{host="%s",measurement="%s",time=%s,type="%s"} %s \n' % (FLASK_HOSTNAME, "CPU", "10", "some", some_10)
+            return_string += 'Pressure{host="%s",measurement="%s",time=%s,type="%s"} %s \n' % (FLASK_HOSTNAME, "CPU", "60", "some", some_60)
     with open("/proc/pressure/memory") as mem:
         for memline in mem.readlines():
             line = memline.split()
@@ -605,7 +605,8 @@ def pressure_metrics_data(influx=False):
                 full_10 = line[1].split("=")[1]
                 full_60 = line[2].split("=")[1]
         if influx:
-            return_string += 'Pressure,host=%s,type=%s,measurement=%s full10=%s,full60s=%s,some10=%s,some60s=%s \n' % (FLASK_HOSTNAME, "full", "MEM", full_10, full_60, some_10, some_60)
+            return_string += 'Pressure,host=%s,measurement=%s full10=%s,full60s=%s,some10=%s,some60s=%s \n' % \
+                             (FLASK_HOSTNAME, "MEM", full_10, full_60, some_10, some_60)
         else:
             return_string += 'Pressure{host="%s",measurement="%s",time=%s,type="%s"} %s \n' % (FLASK_HOSTNAME, "MEM", "10", "full", full_10)
             return_string += 'Pressure{host="%s",measurement="%s",time=%s,type="%s"} %s \n' % (FLASK_HOSTNAME, "MEM", "60", "full", full_60)
@@ -639,19 +640,26 @@ def pi_metrics_data(influx=False):
     with open("/sys/class/thermal/thermal_zone0/temp") as temp:
         for line in temp.readlines():
             if influx:
-                print("")
-                # return_string += 'PiStats,host="%s",filesystem="%s" total=%s,used=%s,avaliable=%s,pc=%s \n' % (FLASK_HOSTNAME, element[0], element[1][:-1], element[2][:-1], element[3][:-1], element[4][:-1])
+                return_string += 'PiStats,host=%s,measurement=%s temp=%s \n' % \
+                                 (FLASK_HOSTNAME, "temp", int(line) / 1000)
             else:
                 return_string += 'PiStats{host="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, "temp", int(line) / 1000)
     with open("/sys/devices/system/cpu/cpufreq/policy0/stats/time_in_state") as cpu_fre_max:
-        time_in_freq = {}
+        freq_string = ""
+        freq_ratio = 0
+        freq_steps = 0
         for line in cpu_fre_max.readlines():
-            time_in_freq[line.split()[0]] = line.split()[1]
             if influx:
-                print("")
-                # return_string += 'PiStats,host="%s",filesystem="%s" total=%s,used=%s,avaliable=%s,pc=%s \n' % (FLASK_HOSTNAME, element[0], element[1][:-1], element[2][:-1], element[3][:-1], element[4][:-1])
+                freq_string += "freq_%s=%s," % (line.split()[0], line.split()[1])
+                freq_ratio += int(line.split()[0]) * int(line.split()[1])
+                freq_steps += int(line.split()[1])
             else:
                 return_string += 'PiStats{host="%s",measurement="%s",freq=%s} %s \n' % (FLASK_HOSTNAME, "cpu_freq", line.split()[0], line.split[1])
+        if influx:
+            return_string += 'PiStats,host=%s,measurement=%s %s \n' % \
+                             (FLASK_HOSTNAME, "cpu_freq", freq_string[:-1])
+            return_string += 'PiStats,host=%s,measurement=%s cpu_ratio=%s \n' % \
+                             (FLASK_HOSTNAME, "cpu_ratio", freq_ratio/freq_steps)
     return return_string
 
 
