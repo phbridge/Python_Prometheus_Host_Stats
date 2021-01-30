@@ -291,9 +291,9 @@ def cpu_metrics_data(influx=False):
             cpu_guest_pc = round(cpu_guest / cpu_total, 3)
             cpu_guest_nice_pc = round(cpu_guest_nice / cpu_total, 3)
             if influx:
-                return_string += 'CPUUsage,host="%s",interval="%s" user=%s,nice=%s,system=%s,idle=%s,iowait=%s,irq=%s,softirq=%s,steal=%s,guest=%s,guest_nice=%s \n' % \
+                return_string += 'CPUUsage,host=%s,interval=%s user=%s,nice=%s,system=%s,idle=%s,iowait=%s,irq=%s,softirq=%s,steal=%s,guest=%s,guest_nice=%s \n' % \
                                  (FLASK_HOSTNAME, "0", cpu_user, cpu_nice, cpu_system, cpu_idle, cpu_iowait, cpu_irq, cpu_softirq, cpu_steal, cpu_guest, cpu_guest_nice)
-                return_string += 'CPUUsage_pc,host="%s",interval="%s" user=%s,nice=%s,system=%s,idle=%s,iowait=%s,irq=%s,softirq=%s,steal=%s,guest=%s,guest_nice=%s \n' % \
+                return_string += 'CPUUsage_pc,host=%s,interval=%s user=%s,nice=%s,system=%s,idle=%s,iowait=%s,irq=%s,softirq=%s,steal=%s,guest=%s,guest_nice=%s \n' % \
                                  (FLASK_HOSTNAME, "0", cpu_user_pc, cpu_nice_pc, cpu_system_pc, cpu_idle_pc, cpu_iowait_pc, cpu_irq_pc, cpu_softirq_pc, cpu_steal_pc, cpu_guest_pc, cpu_guest_nice_pc)
             else:
                 return_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval="%s"} %s \n' % (cpu_name, FLASK_HOSTNAME, "user", "0", cpu_user)
@@ -338,9 +338,9 @@ def cpu_metrics_data(influx=False):
             cpu_guest_pc = round(cpu_guest / cpu_total, 3)
             cpu_guest_nice_pc = round(cpu_guest_nice / cpu_total, 3)
             if influx:
-                return_string += 'CPUUsage,host="%s",interval="%s" user=%s,nice=%s,system=%s,idle=%s,iowait=%s,irq=%s,softirq=%s,steal=%s,guest=%s,guest_nice=%s \n' % \
+                return_string += 'CPUUsage,host=%s,interval=%s user=%s,nice=%s,system=%s,idle=%s,iowait=%s,irq=%s,softirq=%s,steal=%s,guest=%s,guest_nice=%s \n' % \
                                  (FLASK_HOSTNAME, "5", cpu_user, cpu_nice, cpu_system, cpu_idle, cpu_iowait, cpu_irq, cpu_softirq, cpu_steal, cpu_guest, cpu_guest_nice)
-                return_string += 'CPUUsage_pc,host="%s",interval="%s" user=%s,nice=%s,system=%s,idle=%s,iowait=%s,irq=%s,softirq=%s,steal=%s,guest=%s,guest_nice=%s \n' % \
+                return_string += 'CPUUsage_pc,host=%s,interval=%s user=%s,nice=%s,system=%s,idle=%s,iowait=%s,irq=%s,softirq=%s,steal=%s,guest=%s,guest_nice=%s \n' % \
                                  (FLASK_HOSTNAME, "5", cpu_user_pc, cpu_nice_pc, cpu_system_pc, cpu_idle_pc, cpu_iowait_pc, cpu_irq_pc, cpu_softirq_pc, cpu_steal_pc, cpu_guest_pc, cpu_guest_nice_pc)
             else:
                 return_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval="%s"} %s \n' % (cpu_name, FLASK_HOSTNAME, "user", "5", cpu_user)
@@ -385,9 +385,9 @@ def cpu_metrics_data(influx=False):
             cpu_guest_pc = round(cpu_guest / cpu_total, 3)
             cpu_guest_nice_pc = round(cpu_guest_nice / cpu_total, 3)
             if influx:
-                return_string += 'CPUUsage,host="%s",interval="%s" user=%s,nice=%s,system=%s,idle=%s,iowait=%s,irq=%s,softirq=%s,steal=%s,guest=%s,guest_nice=%s \n' % \
+                return_string += 'CPUUsage,host=%s,interval=%s user=%s,nice=%s,system=%s,idle=%s,iowait=%s,irq=%s,softirq=%s,steal=%s,guest=%s,guest_nice=%s \n' % \
                                  (FLASK_HOSTNAME, "15", cpu_user, cpu_nice, cpu_system, cpu_idle, cpu_iowait, cpu_irq, cpu_softirq, cpu_steal, cpu_guest, cpu_guest_nice)
-                return_string += 'CPUUsage_pc,host="%s",interval="%s" user=%s,nice=%s,system=%s,idle=%s,iowait=%s,irq=%s,softirq=%s,steal=%s,guest=%s,guest_nice=%s \n' % \
+                return_string += 'CPUUsage_pc,host=%s,interval=%s user=%s,nice=%s,system=%s,idle=%s,iowait=%s,irq=%s,softirq=%s,steal=%s,guest=%s,guest_nice=%s \n' % \
                                  (FLASK_HOSTNAME, "15", cpu_user_pc, cpu_nice_pc, cpu_system_pc, cpu_idle_pc, cpu_iowait_pc, cpu_irq_pc, cpu_softirq_pc, cpu_steal_pc, cpu_guest_pc, cpu_guest_nice_pc)
             else:
                 return_string += 'CPUUsage{cpu="%s",host="%s",measurement="%s",interval="%s"} %s \n' % (cpu_name, FLASK_HOSTNAME, "user", "15", cpu_user)
@@ -498,7 +498,7 @@ def memory_metrics_data(influx=False):
             elif "Inactive" in line[0]:
                 MEMORY_DATA["Inactive"] = line[1]
     if influx:
-        return_string += 'MemoryUsage,host="%s" SwapTotal=%s,SwapFree=%s,SwapCached=%s,SwapUsed=%s,MemTotal=%s,MemFree=%s,MemAvailable=%s,Buffers=%s,Cached=%s,Active=%s,Inactive=%s \n' % \
+        return_string += 'MemoryUsage,host=%s SwapTotal=%s,SwapFree=%s,SwapCached=%s,SwapUsed=%s,MemTotal=%s,MemFree=%s,MemAvailable=%s,Buffers=%s,Cached=%s,Active=%s,Inactive=%s \n' % \
                          (FLASK_HOSTNAME, MEMORY_DATA["SwapTotal"], MEMORY_DATA["SwapFree"], MEMORY_DATA["SwapCached"], int(MEMORY_DATA["SwapTotal"]) - int(MEMORY_DATA["SwapFree"]), MEMORY_DATA["MemTotal"], MEMORY_DATA["MemFree"], MEMORY_DATA["MemAvailable"], MEMORY_DATA["Buffers"], MEMORY_DATA["Cached"], MEMORY_DATA["Active"], MEMORY_DATA["Inactive"])
     else:
         return_string += 'MemoryUsage{host="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, "SwapTotal", MEMORY_DATA["SwapTotal"])
@@ -575,7 +575,7 @@ def pressure_metrics_data(influx=False):
                 full_10 = line[1].split("=")[1]
                 full_60 = line[2].split("=")[1]
         if influx:
-            return_string += 'Pressure,host="%s",type="%s",measurement="%s" full10=%s,full60s=%s,some10=%s,some60s=%s \n' % (
+            return_string += 'Pressure,host=%s,type=%s,measurement=%s full10=%s,full60s=%s,some10=%s,some60s=%s \n' % (
             FLASK_HOSTNAME, "full", "MEM", full_10, full_60, some_10, some_60)
         else:
             return_string += 'Pressure{host="%s",measurement="%s",time=%s,type="%s"} %s \n' % (FLASK_HOSTNAME, "IO", "10", "full", full_10)
@@ -589,7 +589,7 @@ def pressure_metrics_data(influx=False):
                 some_10 = line[1].split("=")[1]
                 some_60 = line[2].split("=")[1]
         if influx:
-            return_string += 'Pressure,host="%s",type="%s",measurement="%s" some10=%s,some60s=%s \n' % (
+            return_string += 'Pressure,host=%s,type=%s,measurement=%s some10=%s,some60s=%s \n' % (
             FLASK_HOSTNAME, "full", "MEM", some_10, some_60)
         else:
             return_string += 'Pressure{host="%s",measurement="%s",time=%s,type="%s"} %s \n' % (FLASK_HOSTNAME, "MEM", "10", "some", some_10)
@@ -605,7 +605,7 @@ def pressure_metrics_data(influx=False):
                 full_10 = line[1].split("=")[1]
                 full_60 = line[2].split("=")[1]
         if influx:
-            return_string += 'Pressure,host="%s",type="%s",measurement="%s" full10=%s,full60s=%s,some10=%s,some60s=%s \n' % (FLASK_HOSTNAME, "full", "MEM", full_10, full_60, some_10, some_60)
+            return_string += 'Pressure,host=%s,type=%s,measurement=%s full10=%s,full60s=%s,some10=%s,some60s=%s \n' % (FLASK_HOSTNAME, "full", "MEM", full_10, full_60, some_10, some_60)
         else:
             return_string += 'Pressure{host="%s",measurement="%s",time=%s,type="%s"} %s \n' % (FLASK_HOSTNAME, "MEM", "10", "full", full_10)
             return_string += 'Pressure{host="%s",measurement="%s",time=%s,type="%s"} %s \n' % (FLASK_HOSTNAME, "MEM", "60", "full", full_60)
@@ -744,7 +744,7 @@ def network_metrics_data(influx=False):
                 NETWORK_DATA[interface_name] = network_scrape
     for each in NETWORK_DATA.keys():
         if influx:
-            return_string += 'NetworkStats,host="%s",interface="%s" R_bytes=%s,R_packets=%s,R_errs=%s,R_drop=%s,R_fifo=%s,R_frame=%s,' \
+            return_string += 'NetworkStats,host=%s,interface=%s R_bytes=%s,R_packets=%s,R_errs=%s,R_drop=%s,R_fifo=%s,R_frame=%s,' \
                              'R_compressed=%s,R_multicast=%s,T_bytes=%s,T_packets=%s,T_errs=%s,T_drop=%s,T_fifo=%s,T_colls=%s,T_carrier=%s,T_compressed=%s \n' % \
                              (FLASK_HOSTNAME, each, NETWORK_DATA[each]["R_bytes"], NETWORK_DATA[each]["R_packets"], NETWORK_DATA[each]["R_errs"], NETWORK_DATA[each]["R_drop"], NETWORK_DATA[each]["R_fifo"], NETWORK_DATA[each]["R_frame"],
                               NETWORK_DATA[each]["R_compressed"], NETWORK_DATA[each]["R_multicast"], NETWORK_DATA[each]["T_bytes"], NETWORK_DATA[each]["T_packets"], NETWORK_DATA[each]["T_errs"], NETWORK_DATA[each]["T_drop"], NETWORK_DATA[each]["T_fifo"], NETWORK_DATA[each]["T_colls"], NETWORK_DATA[each]["T_carrier"], NETWORK_DATA[each]["T_compressed"])
@@ -807,7 +807,7 @@ def disk_metrics_data(influx=False):
             continue
         else:
             if influx:
-                return_string += 'DiskStats,host="%s",filesystem="%s" total=%s,used=%s,avaliable=%s,pc=%s \n' % (FLASK_HOSTNAME, element[0], element[1][:-1], element[2][:-1], element[3][:-1], element[4][:-1])
+                return_string += 'DiskStats,host=%s,filesystem="%s" total=%s,used=%s,avaliable=%s,pc=%s \n' % (FLASK_HOSTNAME, element[0], element[1][:-1], element[2][:-1], element[3][:-1], element[4][:-1])
             else:
                 return_string += 'DiskStats{host="%s",filesystem="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, element[0], "total", element[1][:-1])
                 return_string += 'DiskStats{host="%s",filesystem="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, element[0], "used", element[2][:-1])
