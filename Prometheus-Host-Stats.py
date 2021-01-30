@@ -927,6 +927,9 @@ def disk_metrics_data(influx=False):
 
 
 def disk_metrics_thread():
+    function_logger = logger.getChild("%s.%s.%s" % (inspect.stack()[2][3], inspect.stack()[1][3], inspect.stack()[0][3]))
+    function_logger.info("disk_metrics_thread")
+
     # while not THREAD_TO_BREAK.is_set():
     #     now = datetime.now()
     #     future = now + timedelta(seconds=30)
@@ -948,6 +951,10 @@ def disk_metrics_thread():
             to_send += each + " " + timestamp_string + "\n"
         if not historical_upload == "":
             to_send += historical_upload
+        #
+        function_logger.info("to_send")
+        function_logger.info(to_send)
+        #
         if update_influx(to_send):
             historical_upload = ""
         else:
@@ -978,6 +985,7 @@ def update_influx(raw_string, timestamp=None):
                     if upload_to_influx_sessions_response.status_code == 204:
                         success = True
                     else:
+                        attempts += 1
                         function_logger.info("status_code=%s" % upload_to_influx_sessions_response.status_code)
                         function_logger.info("status_code=%s" % upload_to_influx_sessions_response.content)
                 except requests.exceptions.ConnectTimeout as e:
