@@ -9,6 +9,9 @@
 # nice and easy to also scrape for this. I got fed up of the different ways telegraf and prometheus reported stuff making
 # comparisons and graphing on a single page hard work.
 #
+# This was largely built to monitor RaspberryPi4 running Debian (not rasparian) There is two flags to run in either mode
+# Pull mode (prometheus/flask) or Push mode (Influx direct)
+#
 # # Contacts
 # Phil Bridges - phbridge@cisco.com
 #
@@ -52,6 +55,9 @@ ABSOLUTE_PATH = credentials.ABSOLUTE_PATH
 LOGFILE = credentials.LOGFILE
 INFLUX_DB_Path = credentials.INFLUX_DB_PATH
 
+INFLUX_MODE = credentials.INFLUX_MODE
+FLASK_MODE = credentials.FLASK_MODE
+
 THREAD_TO_BREAK = threading.Event()
 
 multiprocessing_manager = Manager()
@@ -59,7 +65,8 @@ MEMORY_DATA = multiprocessing_manager.dict({})
 NETWORK_DATA = multiprocessing_manager.dict({})
 CPU_DATA_LIST = multiprocessing_manager.list()
 
-flask_app = Flask(__name__)
+if FLASK_MODE:
+    flask_app = Flask(__name__)
 
 
 def cpu_five_seconds_interval(interval=5):
@@ -419,12 +426,31 @@ def cpu_metrics_data(influx=False):
 
 
 def cpu_metrics_thread():
+    # while not THREAD_TO_BREAK.is_set():
+    #     now = datetime.now()
+    #     future = now + timedelta(seconds=15)
+    #     influx_upload = ""
+    #     influx_upload += cpu_metrics_data(influx=True)
+    #     update_influx(influx_upload, now)
+    #     time_to_sleep = (future - datetime.now()).seconds
+    #     if 30 > time_to_sleep > 0:
+    #         THREAD_TO_BREAK.wait(time_to_sleep)
+    historical_upload = ""
     while not THREAD_TO_BREAK.is_set():
         now = datetime.now()
-        future = now + timedelta(seconds=15)
+        timestamp_string = str(int(now.timestamp()) * 1000000000)
+        future = now + timedelta(seconds=30)
         influx_upload = ""
         influx_upload += cpu_metrics_data(influx=True)
-        update_influx(influx_upload, now)
+        to_send = ""
+        for each in influx_upload.splitlines():
+            to_send += each + " " + timestamp_string + "\n"
+        if not historical_upload == "":
+            to_send += historical_upload
+        if update_influx(to_send):
+            historical_upload = ""
+        else:
+            historical_upload += influx_upload
         time_to_sleep = (future - datetime.now()).seconds
         if 30 > time_to_sleep > 0:
             THREAD_TO_BREAK.wait(time_to_sleep)
@@ -516,12 +542,31 @@ def memory_metrics_data(influx=False):
 
 
 def memory_metrics_thread():
+    # while not THREAD_TO_BREAK.is_set():
+    #     now = datetime.now()
+    #     future = now + timedelta(seconds=30)
+    #     influx_upload = ""
+    #     influx_upload += memory_metrics_data(influx=True)
+    #     update_influx(influx_upload, now)
+    #     time_to_sleep = (future - datetime.now()).seconds
+    #     if 30 > time_to_sleep > 0:
+    #         THREAD_TO_BREAK.wait(time_to_sleep)
+    historical_upload = ""
     while not THREAD_TO_BREAK.is_set():
         now = datetime.now()
+        timestamp_string = str(int(now.timestamp()) * 1000000000)
         future = now + timedelta(seconds=30)
         influx_upload = ""
         influx_upload += memory_metrics_data(influx=True)
-        update_influx(influx_upload, now)
+        to_send = ""
+        for each in influx_upload.splitlines():
+            to_send += each + " " + timestamp_string + "\n"
+        if not historical_upload == "":
+            to_send += historical_upload
+        if update_influx(to_send):
+            historical_upload = ""
+        else:
+            historical_upload += influx_upload
         time_to_sleep = (future - datetime.now()).seconds
         if 30 > time_to_sleep > 0:
             THREAD_TO_BREAK.wait(time_to_sleep)
@@ -616,12 +661,31 @@ def pressure_metrics_data(influx=False):
 
 
 def pressure_metrics_thread():
+    # while not THREAD_TO_BREAK.is_set():
+    #     now = datetime.now()
+    #     future = now + timedelta(seconds=30)
+    #     influx_upload = ""
+    #     influx_upload += pressure_metrics_data(influx=True)
+    #     update_influx(influx_upload, now)
+    #     time_to_sleep = (future - datetime.now()).seconds
+    #     if 30 > time_to_sleep > 0:
+    #         THREAD_TO_BREAK.wait(time_to_sleep)
+    historical_upload = ""
     while not THREAD_TO_BREAK.is_set():
         now = datetime.now()
+        timestamp_string = str(int(now.timestamp()) * 1000000000)
         future = now + timedelta(seconds=30)
         influx_upload = ""
         influx_upload += pressure_metrics_data(influx=True)
-        update_influx(influx_upload, now)
+        to_send = ""
+        for each in influx_upload.splitlines():
+            to_send += each + " " + timestamp_string + "\n"
+        if not historical_upload == "":
+            to_send += historical_upload
+        if update_influx(to_send):
+            historical_upload = ""
+        else:
+            historical_upload += influx_upload
         time_to_sleep = (future - datetime.now()).seconds
         if 30 > time_to_sleep > 0:
             THREAD_TO_BREAK.wait(time_to_sleep)
@@ -664,12 +728,31 @@ def pi_metrics_data(influx=False):
 
 
 def pi_metrics_thread():
+    # while not THREAD_TO_BREAK.is_set():
+    #     now = datetime.now()
+    #     future = now + timedelta(seconds=30)
+    #     influx_upload = ""
+    #     influx_upload += pi_metrics_data(influx=True)
+    #     update_influx(influx_upload, now)
+    #     time_to_sleep = (future - datetime.now()).seconds
+    #     if 30 > time_to_sleep > 0:
+    #         THREAD_TO_BREAK.wait(time_to_sleep)
+    historical_upload = ""
     while not THREAD_TO_BREAK.is_set():
         now = datetime.now()
+        timestamp_string = str(int(now.timestamp()) * 1000000000)
         future = now + timedelta(seconds=30)
         influx_upload = ""
         influx_upload += pi_metrics_data(influx=True)
-        update_influx(influx_upload, now)
+        to_send = ""
+        for each in influx_upload.splitlines():
+            to_send += each + " " + timestamp_string + "\n"
+        if not historical_upload == "":
+            to_send += historical_upload
+        if update_influx(to_send):
+            historical_upload = ""
+        else:
+            historical_upload += influx_upload
         time_to_sleep = (future - datetime.now()).seconds
         if 30 > time_to_sleep > 0:
             THREAD_TO_BREAK.wait(time_to_sleep)
@@ -777,12 +860,31 @@ def network_metrics_data(influx=False):
 
 
 def network_metrics_thread():
+    # while not THREAD_TO_BREAK.is_set():
+    #     now = datetime.now()
+    #     future = now + timedelta(seconds=30)
+    #     influx_upload = ""
+    #     influx_upload += network_metrics_data(influx=True)
+    #     update_influx(influx_upload, now)
+    #     time_to_sleep = (future - datetime.now()).seconds
+    #     if 30 > time_to_sleep > 0:
+    #         THREAD_TO_BREAK.wait(time_to_sleep)
+    historical_upload = ""
     while not THREAD_TO_BREAK.is_set():
         now = datetime.now()
+        timestamp_string = str(int(now.timestamp()) * 1000000000)
         future = now + timedelta(seconds=30)
         influx_upload = ""
         influx_upload += network_metrics_data(influx=True)
-        update_influx(influx_upload, now)
+        to_send = ""
+        for each in influx_upload.splitlines():
+            to_send += each + " " + timestamp_string + "\n"
+        if not historical_upload == "":
+            to_send += historical_upload
+        if update_influx(to_send):
+            historical_upload = ""
+        else:
+            historical_upload += influx_upload
         time_to_sleep = (future - datetime.now()).seconds
         if 30 > time_to_sleep > 0:
             THREAD_TO_BREAK.wait(time_to_sleep)
@@ -825,24 +927,45 @@ def disk_metrics_data(influx=False):
 
 
 def disk_metrics_thread():
+    # while not THREAD_TO_BREAK.is_set():
+    #     now = datetime.now()
+    #     future = now + timedelta(seconds=30)
+    #     influx_upload = ""
+    #     influx_upload += disk_metrics_data(influx=True)
+    #     update_influx(influx_upload, now)
+    #     time_to_sleep = (future - datetime.now()).seconds
+    #     if 30 > time_to_sleep > 0:
+    #         THREAD_TO_BREAK.wait(time_to_sleep)
+    historical_upload = ""
     while not THREAD_TO_BREAK.is_set():
         now = datetime.now()
+        timestamp_string = str(int(now.timestamp()) * 1000000000)
         future = now + timedelta(seconds=30)
         influx_upload = ""
         influx_upload += disk_metrics_data(influx=True)
-        update_influx(influx_upload, now)
+        to_send = ""
+        for each in influx_upload.splitlines():
+            to_send += each + " " + timestamp_string + "\n"
+        if not historical_upload == "":
+            to_send += historical_upload
+        if update_influx(to_send):
+            historical_upload = ""
+        else:
+            historical_upload += influx_upload
         time_to_sleep = (future - datetime.now()).seconds
         if 30 > time_to_sleep > 0:
             THREAD_TO_BREAK.wait(time_to_sleep)
 
 
-def update_influx(raw_string, timestamp):
+def update_influx(raw_string, timestamp=None):
     function_logger = logger.getChild("%s.%s.%s" % (inspect.stack()[2][3], inspect.stack()[1][3], inspect.stack()[0][3]))
     try:
         string_to_upload = ""
         timestamp_string = str(int(timestamp.timestamp()) * 1000000000)
-        for each in raw_string.splitlines():
-            string_to_upload += each + " " + timestamp_string + "\n"
+        if timestamp is not None:
+            for each in raw_string.splitlines():
+                string_to_upload += each + " " + timestamp_string + "\n"
+        success_array = []
         upload_to_influx_sessions = requests.session()
         for influx_url in INFLUX_DB_Path:
             success = False
@@ -876,22 +999,30 @@ def update_influx(raw_string, timestamp):
                     function_logger.debug("update_influx - TRACEBACK=" + str(traceback.format_exc()))
                     attempt_error_array.append(str(sys.exc_info()[0]))
                     break
+            success_array.append(success)
         upload_to_influx_sessions.close()
-        if not success:
+        super_success = False
+        for each in success_array:
+            if not each:
+                super_success = False
+                break
+            else:
+                super_success = True
+        if not super_success:
             function_logger.error("update_influx - FAILED after 5 attempts. Failed up update " + str(string_to_upload.splitlines()[0]))
             function_logger.error("update_influx - FAILED after 5 attempts. attempt_error_array: " + str(attempt_error_array))
-            return
+            return False
         else:
             function_logger.debug("update_influx - " + "string for influx is " + str(string_to_upload))
             function_logger.debug("update_influx - " + "influx status code is  " + str(upload_to_influx_sessions_response.status_code))
             function_logger.debug("update_influx - " + "influx response is code is " + str(upload_to_influx_sessions_response.text[0:1000]))
-            return
+            return True
     except Exception as e:
         function_logger.error("update_influx - something went bad sending to InfluxDB")
         function_logger.error("update_influx - Unexpected error:" + str(sys.exc_info()[0]))
         function_logger.error("update_influx - Unexpected error:" + str(e))
         function_logger.error("update_influx - TRACEBACK=" + str(traceback.format_exc()))
-    return
+    return False
 
 
 def graceful_killer(signal_number, frame):
@@ -901,15 +1032,17 @@ def graceful_killer(signal_number, frame):
     THREAD_TO_BREAK.set()
     function_logger.info("set thread to break")
     cpu_update_thread.join()
-    cpu_thread.join()
-    mem_thread.join()
-    pressure_thread.join()
-    pi_thread.join()
-    network_thread.join()
-    disk_thread.join()
+    if INFLUX_MODE:
+        cpu_thread.join()
+        mem_thread.join()
+        pressure_thread.join()
+        pi_thread.join()
+        network_thread.join()
+        disk_thread.join()
     function_logger.info("joined all threads")
-    http_server.stop()
-    function_logger.info("stopped HTTP server")
+    if FLASK_MODE:
+        http_server.stop()
+        function_logger.info("stopped HTTP server")
     quit()
 
 
@@ -931,21 +1064,23 @@ if __name__ == "__main__":
     # Start the cron type jobs
     logger.info("start the cron update thread")
     cpu_update_thread = threading.Thread(target=lambda: get_latest_cpu_stats())
-    cpu_thread = threading.Thread(target=lambda: cpu_metrics_thread())
-    mem_thread = threading.Thread(target=lambda: memory_metrics_thread())
-    pressure_thread = threading.Thread(target=lambda: pressure_metrics_thread())
-    pi_thread = threading.Thread(target=lambda: pi_metrics_thread())
-    network_thread = threading.Thread(target=lambda: network_metrics_thread())
-    disk_thread = threading.Thread(target=lambda: disk_metrics_thread())
     cpu_update_thread.start()
-    cpu_thread.start()
-    mem_thread.start()
-    pressure_thread.start()
-    pi_thread.start()
-    network_thread.start()
-    disk_thread.start()
+    if INFLUX_MODE:
+        cpu_thread = threading.Thread(target=lambda: cpu_metrics_thread())
+        mem_thread = threading.Thread(target=lambda: memory_metrics_thread())
+        pressure_thread = threading.Thread(target=lambda: pressure_metrics_thread())
+        pi_thread = threading.Thread(target=lambda: pi_metrics_thread())
+        network_thread = threading.Thread(target=lambda: network_metrics_thread())
+        disk_thread = threading.Thread(target=lambda: disk_metrics_thread())
+        cpu_thread.start()
+        mem_thread.start()
+        pressure_thread.start()
+        pi_thread.start()
+        network_thread.start()
+        disk_thread.start()
 
     # Start WebServer
-    logger.info("start web server")
-    http_server = wsgiserver.WSGIServer(host=FLASK_HOST, port=FLASK_PORT, wsgi_app=flask_app)
-    http_server.start()
+    if FLASK_MODE:
+        logger.info("start web server")
+        http_server = wsgiserver.WSGIServer(host=FLASK_HOST, port=FLASK_PORT, wsgi_app=flask_app)
+        http_server.start()

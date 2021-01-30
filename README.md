@@ -13,6 +13,8 @@ add this. I am amazed someone has not done it already but a quick search returne
 
 I should probably mention this uses proc/XYZ for grabbing the stats so will only work on OS's that have the proc files :-)
 
+This can be run in either Pull mode (Prometheus/Flask) or Push mode (Influx directly)
+
 # Contacts
 Phil Bridges - phbridge@cisco.com
 
