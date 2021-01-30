@@ -850,6 +850,7 @@ def disk_metrics_thread():
         if not historical_upload == "":
             function_logger.info("adding history to upload")
             to_send += historical_upload
+            function_logger.info(to_send)
         if update_influx(to_send):
             historical_upload = ""
         else:
