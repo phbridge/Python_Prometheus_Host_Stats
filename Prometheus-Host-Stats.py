@@ -612,8 +612,7 @@ def pi_metrics_data(influx=False):
     with open("/sys/class/thermal/thermal_zone0/temp") as temp:
         for line in temp.readlines():
             if influx:
-                return_string += 'PiStats,host=%s,measurement=%s temp=%s \n' % \
-                                 (FLASK_HOSTNAME, "temp", int(line) / 1000)
+                return_string += 'PiStats,host=%s,measurement=%s temp=%s \n' % (FLASK_HOSTNAME, "temp", int(line) / 1000)
             else:
                 return_string += 'PiStats{host="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, "temp", int(line) / 1000)
     with open("/sys/devices/system/cpu/cpufreq/policy0/stats/time_in_state") as cpu_fre_max:
@@ -628,10 +627,9 @@ def pi_metrics_data(influx=False):
             else:
                 return_string += 'PiStats{host="%s",measurement="%s",freq=%s} %s \n' % (FLASK_HOSTNAME, "cpu_freq", line.split()[0], line.split[1])
         if influx:
-            return_string += 'PiStats,host=%s,measurement=%s %s \n' % \
-                             (FLASK_HOSTNAME, "cpu_freq", freq_string[:-1])
-            return_string += 'PiStats,host=%s,measurement=%s cpu_ratio=%s \n' % \
-                             (FLASK_HOSTNAME, "cpu_ratio", freq_ratio/freq_steps)
+            return_string += 'PiStats,host=%s,measurement=%s %s \n' % (FLASK_HOSTNAME, "cpu_freq", freq_string[:-1])
+            return_string += 'PiStats,host=%s,measurement=%s cpu_ratio=%s,cpu_cycles=%s,cpu_rate=%s \n' % \
+                             (FLASK_HOSTNAME, "cpu_ratio", freq_ratio/freq_steps, freq_ratio, freq_steps)
     return return_string
 
 
