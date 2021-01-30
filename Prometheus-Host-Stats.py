@@ -929,7 +929,6 @@ def disk_metrics_data(influx=False):
 def disk_metrics_thread():
     function_logger = logger.getChild("%s.%s.%s" % (inspect.stack()[2][3], inspect.stack()[1][3], inspect.stack()[0][3]))
     function_logger.info("disk_metrics_thread")
-
     # while not THREAD_TO_BREAK.is_set():
     #     now = datetime.now()
     #     future = now + timedelta(seconds=30)
@@ -946,21 +945,16 @@ def disk_metrics_thread():
         future = now + timedelta(seconds=30)
         influx_upload = ""
         influx_upload += disk_metrics_data(influx=True)
-        # function_logger.info("influx_upload")
-        # function_logger.info(influx_upload)
         to_send = ""
         for each in influx_upload.splitlines():
             to_send += each + " " + timestamp_string + "\n"
         if not historical_upload == "":
+            function_logger.info("adding history to upload")
             to_send += historical_upload
-        #
-        # function_logger.info("to_send")
-        # function_logger.info(to_send)
-        #
         if update_influx(to_send):
-            # function_logger.info("reset history")
             historical_upload = ""
         else:
+            function_logger.info("adding to history")
             historical_upload += influx_upload
         time_to_sleep = (future - datetime.now()).seconds
         if 30 > time_to_sleep > 0:
@@ -988,12 +982,12 @@ def update_influx(raw_string, timestamp=None):
                 try:
                     upload_to_influx_sessions_response = upload_to_influx_sessions.post(url=influx_url, data=string_to_upload, timeout=(2, 1))
                     if upload_to_influx_sessions_response.status_code == 204:
-                        function_logger.info("content=%s" % upload_to_influx_sessions_response.content)
+                        function_logger.debug("content=%s" % upload_to_influx_sessions_response.content)
                         success = True
                     else:
                         attempts += 1
-                        function_logger.info("status_code=%s" % upload_to_influx_sessions_response.status_code)
-                        function_logger.info("status_code=%s" % upload_to_influx_sessions_response.content)
+                        function_logger.warning("status_code=%s" % upload_to_influx_sessions_response.status_code)
+                        function_logger.warning("status_code=%s" % upload_to_influx_sessions_response.content)
                 except requests.exceptions.ConnectTimeout as e:
                     attempts += 1
                     function_logger.debug("update_influx - attempted " + str(attempts) + " Failed Connection Timeout")
