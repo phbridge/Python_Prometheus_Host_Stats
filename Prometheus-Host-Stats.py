@@ -959,6 +959,7 @@ def disk_metrics_thread():
 
 def update_influx(raw_string, timestamp=None):
     function_logger = logger.getChild("%s.%s.%s" % (inspect.stack()[2][3], inspect.stack()[1][3], inspect.stack()[0][3]))
+    function_logger.info("update_influx")
     try:
         string_to_upload = ""
         if timestamp is not None:
@@ -974,6 +975,8 @@ def update_influx(raw_string, timestamp=None):
             while attempts < 5 and not success:
                 try:
                     upload_to_influx_sessions_response = upload_to_influx_sessions.post(url=influx_url, data=string_to_upload, timeout=(2, 1))
+                    function_logger.info("status_code=%s" % upload_to_influx_sessions_response.status_code)
+                    function_logger.info("status_code=%s" % upload_to_influx_sessions_response.text)
                     success = True
                 except requests.exceptions.ConnectTimeout as e:
                     attempts += 1
