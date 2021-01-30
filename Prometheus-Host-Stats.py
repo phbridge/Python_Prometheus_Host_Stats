@@ -47,8 +47,6 @@ import requests
 
 import credentials                      # imports static values
 
-FLASK_HOST = credentials.FLASK_HOST
-FLASK_PORT = credentials.FLASK_PORT
 FLASK_HOSTNAME = credentials.FLASK_HOSTNAME
 TARGET_URL = "http://" + FLASK_HOSTNAME + ":" + str(FLASK_PORT) + "/"
 ABSOLUTE_PATH = credentials.ABSOLUTE_PATH
@@ -66,6 +64,8 @@ NETWORK_DATA = multiprocessing_manager.dict({})
 CPU_DATA_LIST = multiprocessing_manager.list()
 
 if FLASK_MODE:
+    FLASK_HOST = credentials.FLASK_HOST
+    FLASK_PORT = credentials.FLASK_PORT
     flask_app = Flask(__name__)
 
 
