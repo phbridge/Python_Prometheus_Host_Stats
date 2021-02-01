@@ -828,7 +828,7 @@ def update_influx(raw_string, timestamp=None):
             string_to_upload = raw_string
         success_array = []
         upload_to_influx_sessions = requests.session()
-        for influx_url in INFLUX_DB_Path:
+        for influx_url in INFLUX_DB_PATH:
             success = False
             attempts = 0
             attempt_error_array = []
