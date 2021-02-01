@@ -50,7 +50,7 @@ import credentials                      # imports static values
 FLASK_HOSTNAME = credentials.FLASK_HOSTNAME
 ABSOLUTE_PATH = credentials.ABSOLUTE_PATH
 LOGFILE = credentials.LOGFILE
-INFLUX_DB_Path = credentials.INFLUX_DB_PATH
+INFLUX_DB_PATH = credentials.INFLUX_DB_PATH
 
 INFLUX_MODE = credentials.INFLUX_MODE
 FLASK_MODE = credentials.FLASK_MODE
@@ -441,6 +441,7 @@ def cpu_metrics_thread():
         if update_influx(to_send):
             historical_upload = ""
         else:
+            historical_upload = ""
             function_logger.debug("adding to history")
             historical_upload += to_send
         time_to_sleep = (future - datetime.now()).seconds
@@ -518,6 +519,7 @@ def memory_metrics_thread():
         if update_influx(to_send):
             historical_upload = ""
         else:
+            historical_upload = ""
             function_logger.debug("adding to history")
             historical_upload += to_send
         time_to_sleep = (future - datetime.now()).seconds
@@ -604,6 +606,7 @@ def pressure_metrics_thread():
         if update_influx(to_send):
             historical_upload = ""
         else:
+            historical_upload = ""
             function_logger.debug("adding to history")
             historical_upload += to_send
         time_to_sleep = (future - datetime.now()).seconds
@@ -664,6 +667,7 @@ def pi_metrics_thread():
         if update_influx(to_send):
             historical_upload = ""
         else:
+            historical_upload = ""
             function_logger.debug("adding to history")
             historical_upload += to_send
         time_to_sleep = (future - datetime.now()).seconds
@@ -675,48 +679,7 @@ def pi_metrics_thread():
 def network_metrics():
     function_logger = logger.getChild("%s.%s.%s" % (inspect.stack()[2][3], inspect.stack()[1][3], inspect.stack()[0][3]))
     function_logger.info("network_metrics")
-    # with open("/proc/net/dev") as netfile:
-    #     network_scrape = {}
-    #     for netline in netfile.readlines():
-    #         if "Inter" not in netline and "face" not in netline:
-    #             line = netline.split()
-    #             interface_name = line[0].strip(":")
-    #             NETWORK_DATA[interface_name] = {}
-    #             network_scrape["R_bytes"] = line[1]
-    #             network_scrape["R_packets"] = line[2]
-    #             network_scrape["R_errs"] = line[3]
-    #             network_scrape["R_drop"] = line[4]
-    #             network_scrape["R_fifo"] = line[5]
-    #             network_scrape["R_frame"] = line[6]
-    #             network_scrape["R_compressed"] = line[7]
-    #             network_scrape["R_multicast"] = line[8]
-    #             network_scrape["T_bytes"] = line[9]
-    #             network_scrape["T_packets"] = line[10]
-    #             network_scrape["T_errs"] = line[11]
-    #             network_scrape["T_drop"] = line[12]
-    #             network_scrape["T_fifo"] = line[13]
-    #             network_scrape["T_colls"] = line[14]
-    #             network_scrape["T_carrier"] = line[15]
-    #             network_scrape["T_compressed"] = line[16]
-    #             NETWORK_DATA[interface_name] = network_scrape
     return_string = network_metrics_data()
-    # for each in NETWORK_DATA.keys():
-    #     return_string += 'NetworkStats{host="%s",interface="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, each, "R_bytes", NETWORK_DATA[each]["R_bytes"])
-    #     return_string += 'NetworkStats{host="%s",interface="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, each, "R_packets", NETWORK_DATA[each]["R_packets"])
-    #     return_string += 'NetworkStats{host="%s",interface="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, each, "R_errs", NETWORK_DATA[each]["R_errs"])
-    #     return_string += 'NetworkStats{host="%s",interface="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, each, "R_drop", NETWORK_DATA[each]["R_drop"])
-    #     return_string += 'NetworkStats{host="%s",interface="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, each, "R_fifo", NETWORK_DATA[each]["R_fifo"])
-    #     return_string += 'NetworkStats{host="%s",interface="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, each, "R_frame", NETWORK_DATA[each]["R_frame"])
-    #     return_string += 'NetworkStats{host="%s",interface="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, each, "R_compressed", NETWORK_DATA[each]["R_compressed"])
-    #     return_string += 'NetworkStats{host="%s",interface="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, each, "R_multicast", NETWORK_DATA[each]["R_multicast"])
-    #     return_string += 'NetworkStats{host="%s",interface="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, each, "T_bytes", NETWORK_DATA[each]["T_bytes"])
-    #     return_string += 'NetworkStats{host="%s",interface="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, each, "T_packets", NETWORK_DATA[each]["T_packets"])
-    #     return_string += 'NetworkStats{host="%s",interface="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, each, "T_errs", NETWORK_DATA[each]["T_errs"])
-    #     return_string += 'NetworkStats{host="%s",interface="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, each, "T_drop", NETWORK_DATA[each]["T_drop"])
-    #     return_string += 'NetworkStats{host="%s",interface="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, each, "T_fifo", NETWORK_DATA[each]["T_fifo"])
-    #     return_string += 'NetworkStats{host="%s",interface="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, each, "T_colls", NETWORK_DATA[each]["T_colls"])
-    #     return_string += 'NetworkStats{host="%s",interface="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, each, "T_carrier", NETWORK_DATA[each]["T_carrier"])
-    #     return_string += 'NetworkStats{host="%s",interface="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, each, "T_compressed", NETWORK_DATA[each]["T_compressed"])
     return Response(return_string, mimetype='text/plain')
 
 
@@ -791,6 +754,7 @@ def network_metrics_thread():
         if update_influx(to_send):
             historical_upload = ""
         else:
+            historical_upload = ""
             function_logger.debug("adding to history")
             historical_upload += to_send
         time_to_sleep = (future - datetime.now()).seconds
@@ -803,16 +767,6 @@ def disk_metrics():
     function_logger = logger.getChild("%s.%s.%s" % (inspect.stack()[2][3], inspect.stack()[1][3], inspect.stack()[0][3]))
     function_logger.info("disk_metrics")
     return_string = disk_metrics_data(influx=False)
-    # output = subprocess.check_output(['df', '-BM'], stderr=subprocess.STDOUT).decode("utf-8")
-    # for line in output.splitlines():
-    #     element = line.split()
-    #     if element[0] == "Filesystem":
-    #         continue
-    #     else:
-    #         return_string += 'DiskStats{host="%s",filesystem="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, element[0], "total", element[1][:-1])
-    #         return_string += 'DiskStats{host="%s",filesystem="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, element[0], "used", element[2][:-1])
-    #         return_string += 'DiskStats{host="%s",filesystem="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, element[0], "avaliable", element[3][:-1])
-    #         return_string += 'DiskStats{host="%s",filesystem="%s",measurement="%s"} %s \n' % (FLASK_HOSTNAME, element[0], "pc", element[4][:-1])
     return Response(return_string, mimetype='text/plain')
 
 
@@ -853,6 +807,7 @@ def disk_metrics_thread():
         if update_influx(to_send):
             historical_upload = ""
         else:
+            historical_upload = ""
             function_logger.debug("adding to history")
             historical_upload += to_send
         time_to_sleep = (future - datetime.now()).seconds
@@ -886,7 +841,7 @@ def update_influx(raw_string, timestamp=None):
                     else:
                         attempts += 1
                         function_logger.warning("status_code=%s" % upload_to_influx_sessions_response.status_code)
-                        function_logger.warning("status_code=%s" % upload_to_influx_sessions_response.content)
+                        function_logger.warning("content=%s" % upload_to_influx_sessions_response.content)
                 except requests.exceptions.ConnectTimeout as e:
                     attempts += 1
                     function_logger.debug("update_influx - attempted " + str(attempts) + " Failed Connection Timeout")
