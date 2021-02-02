@@ -1,11 +1,12 @@
 [Unit]
 Description=Python_Prometheus_Host_Stats
+After=network.target
 [Install]
 WantedBy=multi-user.target
 [Service]
 User=XXXXXXXXXX
 PermissionsStartOnly=true
-ExecStart=/usr/bin/python3.5 /home/XXXXXXXXXX/Python_Prometheus_Host_Stats/Prometheus-Host-Stats.py
+ExecStart=/usr/bin/python3.7 /home/XXXXXXXXXX/Python_Prometheus_Host_Stats/Prometheus-Host-Stats.py
 TimeoutSec=600
 Restart=on-failure
 RuntimeDirectoryMode=755
