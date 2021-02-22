@@ -441,9 +441,13 @@ def cpu_metrics_thread():
         if update_influx(to_send):
             historical_upload = ""
         else:
+            max_lines = 100
+            line_number = 0
             historical_upload = ""
-            function_logger.debug("adding to history")
-            historical_upload += to_send
+            for line in to_send.splitlines():
+                if line_number < max_lines:
+                    historical_upload += line + "\n"
+                    line_number += 1
         time_to_sleep = (future - datetime.now()).seconds
         if 30 > time_to_sleep > 0:
             THREAD_TO_BREAK.wait(time_to_sleep)
@@ -519,9 +523,13 @@ def memory_metrics_thread():
         if update_influx(to_send):
             historical_upload = ""
         else:
+            max_lines = 100
+            line_number = 0
             historical_upload = ""
-            function_logger.debug("adding to history")
-            historical_upload += to_send
+            for line in to_send.splitlines():
+                if line_number < max_lines:
+                    historical_upload += line + "\n"
+                    line_number += 1
         time_to_sleep = (future - datetime.now()).seconds
         if 30 > time_to_sleep > 0:
             THREAD_TO_BREAK.wait(time_to_sleep)
@@ -606,9 +614,13 @@ def pressure_metrics_thread():
         if update_influx(to_send):
             historical_upload = ""
         else:
+            max_lines = 100
+            line_number = 0
             historical_upload = ""
-            function_logger.debug("adding to history")
-            historical_upload += to_send
+            for line in to_send.splitlines():
+                if line_number < max_lines:
+                    historical_upload += line + "\n"
+                    line_number += 1
         time_to_sleep = (future - datetime.now()).seconds
         if 30 > time_to_sleep > 0:
             THREAD_TO_BREAK.wait(time_to_sleep)
@@ -667,9 +679,13 @@ def pi_metrics_thread():
         if update_influx(to_send):
             historical_upload = ""
         else:
+            max_lines = 100
+            line_number = 0
             historical_upload = ""
-            function_logger.debug("adding to history")
-            historical_upload += to_send
+            for line in to_send.splitlines():
+                if line_number < max_lines:
+                    historical_upload += line + "\n"
+                    line_number += 1
         time_to_sleep = (future - datetime.now()).seconds
         if 30 > time_to_sleep > 0:
             THREAD_TO_BREAK.wait(time_to_sleep)
@@ -754,9 +770,13 @@ def network_metrics_thread():
         if update_influx(to_send):
             historical_upload = ""
         else:
+            max_lines = 100
+            line_number = 0
             historical_upload = ""
-            function_logger.debug("adding to history")
-            historical_upload += to_send
+            for line in to_send.splitlines():
+                if line_number < max_lines:
+                    historical_upload += line + "\n"
+                    line_number += 1
         time_to_sleep = (future - datetime.now()).seconds
         if 30 > time_to_sleep > 0:
             THREAD_TO_BREAK.wait(time_to_sleep)
@@ -807,9 +827,13 @@ def disk_metrics_thread():
         if update_influx(to_send):
             historical_upload = ""
         else:
+            max_lines = 100
+            line_number = 0
             historical_upload = ""
-            function_logger.debug("adding to history")
-            historical_upload += to_send
+            for line in to_send.splitlines():
+                if line_number < max_lines:
+                    historical_upload += line + "\n"
+                    line_number += 1
         time_to_sleep = (future - datetime.now()).seconds
         if 30 > time_to_sleep > 0:
             THREAD_TO_BREAK.wait(time_to_sleep)
@@ -844,26 +868,26 @@ def update_influx(raw_string, timestamp=None):
                         function_logger.warning("content=%s" % upload_to_influx_sessions_response.content)
                 except requests.exceptions.ConnectTimeout as e:
                     attempts += 1
-                    function_logger.debug("update_influx - attempted " + str(attempts) + " Failed Connection Timeout")
-                    function_logger.debug("update_influx - Unexpected error:" + str(sys.exc_info()[0]))
-                    function_logger.debug("update_influx - Unexpected error:" + str(e))
-                    function_logger.debug("update_influx - String was:" + str(string_to_upload).splitlines()[0])
-                    function_logger.debug("update_influx - TRACEBACK=" + str(traceback.format_exc()))
+                    function_logger.debug("attempted " + str(attempts) + " Failed Connection Timeout")
+                    function_logger.debug("Unexpected error:" + str(sys.exc_info()[0]))
+                    function_logger.debug("Unexpected error:" + str(e))
+                    function_logger.debug("String was:" + str(string_to_upload).splitlines()[0])
+                    function_logger.debug("TRACEBACK=" + str(traceback.format_exc()))
                     attempt_error_array.append(str(sys.exc_info()[0]))
                 except requests.exceptions.ConnectionError as e:
                     attempts += 1
-                    function_logger.debug("update_influx - attempted " + str(attempts) + " Failed Connection Error")
-                    function_logger.debug("update_influx - Unexpected error:" + str(sys.exc_info()[0]))
-                    function_logger.debug("update_influx - Unexpected error:" + str(e))
-                    function_logger.debug("update_influx - String was:" + str(string_to_upload).splitlines()[0])
-                    function_logger.debug("update_influx - TRACEBACK=" + str(traceback.format_exc()))
+                    function_logger.debug("attempted " + str(attempts) + " Failed Connection Error")
+                    function_logger.debug("Unexpected error:" + str(sys.exc_info()[0]))
+                    function_logger.debug("Unexpected error:" + str(e))
+                    function_logger.debug("String was:" + str(string_to_upload).splitlines()[0])
+                    function_logger.debug("TRACEBACK=" + str(traceback.format_exc()))
                     attempt_error_array.append(str(sys.exc_info()[0]))
                 except Exception as e:
-                    function_logger.error("update_influx - attempted " + str(attempts) + " Failed")
-                    function_logger.error("update_influx - Unexpected error:" + str(sys.exc_info()[0]))
-                    function_logger.error("update_influx - Unexpected error:" + str(e))
-                    function_logger.error("update_influx - String was:" + str(string_to_upload).splitlines()[0])
-                    function_logger.debug("update_influx - TRACEBACK=" + str(traceback.format_exc()))
+                    function_logger.error("attempted " + str(attempts) + " Failed")
+                    function_logger.error("Unexpected error:" + str(sys.exc_info()[0]))
+                    function_logger.error("Unexpected error:" + str(e))
+                    function_logger.error("String was:" + str(string_to_upload).splitlines()[0])
+                    function_logger.debug("TRACEBACK=" + str(traceback.format_exc()))
                     attempt_error_array.append(str(sys.exc_info()[0]))
                     break
             success_array.append(success)
@@ -876,19 +900,19 @@ def update_influx(raw_string, timestamp=None):
             else:
                 super_success = True
         if not super_success:
-            function_logger.error("update_influx - FAILED after 5 attempts. Failed up update " + str(string_to_upload.splitlines()[0]))
-            function_logger.error("update_influx - FAILED after 5 attempts. attempt_error_array: " + str(attempt_error_array))
+            function_logger.error("FAILED after 5 attempts. Failed up update " + str(string_to_upload.splitlines()[0]))
+            function_logger.error("FAILED after 5 attempts. attempt_error_array: " + str(attempt_error_array))
             return False
         else:
-            function_logger.debug("update_influx - " + "string for influx is " + str(string_to_upload))
-            function_logger.debug("update_influx - " + "influx status code is  " + str(upload_to_influx_sessions_response.status_code))
-            function_logger.debug("update_influx - " + "influx response is code is " + str(upload_to_influx_sessions_response.text[0:1000]))
+            function_logger.debug("string for influx is " + str(string_to_upload))
+            function_logger.debug("influx status code is  " + str(upload_to_influx_sessions_response.status_code))
+            function_logger.debug("influx response is code is " + str(upload_to_influx_sessions_response.text[0:1000]))
             return True
     except Exception as e:
-        function_logger.error("update_influx - something went bad sending to InfluxDB")
-        function_logger.error("update_influx - Unexpected error:" + str(sys.exc_info()[0]))
-        function_logger.error("update_influx - Unexpected error:" + str(e))
-        function_logger.error("update_influx - TRACEBACK=" + str(traceback.format_exc()))
+        function_logger.error("something went bad sending to InfluxDB")
+        function_logger.error("Unexpected error:" + str(sys.exc_info()[0]))
+        function_logger.error("Unexpected error:" + str(e))
+        function_logger.error("TRACEBACK=" + str(traceback.format_exc()))
     return False
 
 
