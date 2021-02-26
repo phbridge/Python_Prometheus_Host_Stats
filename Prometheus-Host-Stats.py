@@ -858,7 +858,7 @@ def update_influx(raw_string, timestamp=None):
             attempt_error_array = []
             while attempts < 5 and not success:
                 try:
-                    upload_to_influx_sessions_response = upload_to_influx_sessions.post(url=influx_url, data=string_to_upload, timeout=(2, 1))
+                    upload_to_influx_sessions_response = upload_to_influx_sessions.post(url=influx_url, data=string_to_upload, timeout=(10, 5))
                     if upload_to_influx_sessions_response.status_code == 204:
                         function_logger.debug("content=%s" % upload_to_influx_sessions_response.content)
                         success = True
