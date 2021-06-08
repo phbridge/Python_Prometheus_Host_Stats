@@ -897,6 +897,14 @@ def update_influx(raw_string, timestamp=None):
                     function_logger.debug("String was:" + str(string_to_upload).splitlines()[0])
                     function_logger.debug("TRACEBACK=" + str(traceback.format_exc()))
                     attempt_error_array.append(str(sys.exc_info()[0]))
+                except requests.exceptions.ReadTimeout as e:
+                    attempts += 1
+                    function_logger.debug("attempted " + str(attempts) + " Failed ReadTimeout")
+                    function_logger.debug("Unexpected error:" + str(sys.exc_info()[0]))
+                    function_logger.debug("Unexpected error:" + str(e))
+                    function_logger.debug("String was:" + str(string_to_upload).splitlines()[0])
+                    function_logger.debug("TRACEBACK=" + str(traceback.format_exc()))
+                    attempt_error_array.append(str(sys.exc_info()[0]))
                 except Exception as e:
                     function_logger.error("attempted " + str(attempts) + " Failed")
                     function_logger.error("Unexpected error:" + str(sys.exc_info()[0]))
