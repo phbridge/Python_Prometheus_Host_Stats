@@ -31,6 +31,8 @@ CPU_DATA_LIST = multiprocessing_manager.list()
 
 
 def laptop_metrics_data():
+    function_logger = logger.getChild("%s.%s.%s" % (inspect.stack()[2][3], inspect.stack()[1][3], inspect.stack()[0][3]))
+    function_logger.info("laptop_metrics_data")
     return_string = ""
     data = {}
     for entry in os.listdir("/sys/class/hwmon/"):
@@ -142,6 +144,8 @@ def laptop_metrics_data():
     for key in data:
         string += "%s,%s," % (key, data[key])
     return_string += 'ProxmoxStats,host=%s %s \n' % (HOSTNAME, string)
+    function_logger.info(string)
+    function_logger.info(return_string)
     return return_string
 
 
