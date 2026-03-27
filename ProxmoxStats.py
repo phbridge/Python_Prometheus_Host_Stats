@@ -46,7 +46,7 @@ def laptop_metrics_data():
                         f.close()
                 elif name == "acpitz":
                     with open("/sys/class/hwmon/" + entry + "/temp1_input", 'r') as f:
-                        data["cpitz_temp1_input"] = f.read().strip()
+                        data["acpitz_temp1_input"] = f.read().strip()
                         f.close()
                 elif name == "BAT0":
                     with open("/sys/class/hwmon/" + entry + "/power1_input", 'r') as f:
@@ -73,14 +73,14 @@ def laptop_metrics_data():
                     #     f.close()
                 elif name == "ucsi_source_psy_USBC000:002":
                     with open("/sys/class/hwmon/" + entry + "/curr1_input", 'r') as f:
-                        data["ucsi2_in0_input"] = f.read().strip()
+                        data["ucsi2_curr1_input"] = f.read().strip()
                         f.close()
                     with open("/sys/class/hwmon/" + entry + "/in0_input", 'r') as f:
                         data["ucsi2_in0_input"] = f.read().strip()
                         f.close()
-                    with open("/sys/class/hwmon/" + entry + "/in0_input", 'r') as f:
-                        data["ucsi2_in0_input"] = f.read().strip()
-                        f.close()
+                    # with open("/sys/class/hwmon/" + entry + "/in0_input", 'r') as f:
+                    #     data["ucsi2_in0_input"] = f.read().strip()
+                    #     f.close()
                 elif name == "pch_cannonlake":
                     with open("/sys/class/hwmon/" + entry + "/temp1_input", 'r') as f:
                         data["pch_cannonlake_temp1_input"] = f.read().strip()
