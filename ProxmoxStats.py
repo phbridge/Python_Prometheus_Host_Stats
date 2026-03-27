@@ -63,14 +63,14 @@ def laptop_metrics_data():
                         f.close()
                 elif name == "ucsi_source_psy_USBC000:001":
                     with open("/sys/class/hwmon/" + entry + "/curr1_input", 'r') as f:
-                        data["ucsi1_in0_input"] = f.read().strip()
+                        data["ucsi1_curr1_input"] = f.read().strip()
                         f.close()
                     with open("/sys/class/hwmon/" + entry + "/in0_input", 'r') as f:
                         data["ucsi1_in0_input"] = f.read().strip()
                         f.close()
-                    with open("/sys/class/hwmon/" + entry + "/in0_input", 'r') as f:
-                        data["ucsi1_in0_input"] = f.read().strip()
-                        f.close()
+                    # with open("/sys/class/hwmon/" + entry + "/in0_input", 'r') as f:
+                    #     data["ucsi1_in0_input"] = f.read().strip()
+                    #     f.close()
                 elif name == "ucsi_source_psy_USBC000:002":
                     with open("/sys/class/hwmon/" + entry + "/curr1_input", 'r') as f:
                         data["ucsi2_in0_input"] = f.read().strip()
