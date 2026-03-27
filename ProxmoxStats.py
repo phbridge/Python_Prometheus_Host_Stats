@@ -154,7 +154,7 @@ def laptop_metrics_thread():
         timestamp_string = str(int(now.timestamp()) * 1000000000)
         future = now + timedelta(seconds=30)
         influx_upload = ""
-        influx_upload += laptop_metrics_data(influx=True)
+        influx_upload += laptop_metrics_data()
         to_send = ""
         for each in influx_upload.splitlines():
             to_send += each + " " + timestamp_string + "\n"
@@ -222,7 +222,7 @@ def pressure_metrics_thread():
         timestamp_string = str(int(now.timestamp()) * 1000000000)
         future = now + timedelta(seconds=30)
         influx_upload = ""
-        influx_upload += pressure_metrics_data(influx=True)
+        influx_upload += pressure_metrics_data()
         to_send = ""
         for each in influx_upload.splitlines():
             to_send += each + " " + timestamp_string + "\n"
@@ -343,7 +343,7 @@ def cpu_metrics_thread():
         timestamp_string = str(int(now.timestamp()) * 1000000000)
         future = now + timedelta(seconds=15)
         influx_upload = ""
-        influx_upload += cpu_metrics_data(influx=True)
+        influx_upload += cpu_metrics_data()
         to_send = ""
         for each in influx_upload.splitlines():
             to_send += each + " " + timestamp_string + "\n"
@@ -596,7 +596,7 @@ def memory_metrics_thread():
         timestamp_string = str(int(now.timestamp()) * 1000000000)
         future = now + timedelta(seconds=30)
         influx_upload = ""
-        influx_upload += memory_metrics_data(influx=True)
+        influx_upload += memory_metrics_data()
         to_send = ""
         for each in influx_upload.splitlines():
             to_send += each + " " + timestamp_string + "\n"
@@ -661,7 +661,7 @@ def network_metrics_thread():
         timestamp_string = str(int(now.timestamp()) * 1000000000)
         future = now + timedelta(seconds=30)
         influx_upload = ""
-        influx_upload += network_metrics_data(influx=True)
+        influx_upload += network_metrics_data()
         to_send = ""
         for each in influx_upload.splitlines():
             to_send += each + " " + timestamp_string + "\n"
@@ -705,7 +705,7 @@ def disk_metrics_thread():
         timestamp_string = str(int(now.timestamp()) * 1000000000)
         future = now + timedelta(seconds=30)
         influx_upload = ""
-        influx_upload += disk_metrics_data(influx=True)
+        influx_upload += disk_metrics_data()
         to_send = ""
         for each in influx_upload.splitlines():
             to_send += each + " " + timestamp_string + "\n"
@@ -848,7 +848,6 @@ if __name__ == "__main__":
     logger.info("start the cron update thread")
     cpu_update_thread = threading.Thread(target=lambda: get_latest_cpu_stats())
     cpu_update_thread.start()
-
     cpu_thread = threading.Thread(target=lambda: cpu_metrics_thread())
     mem_thread = threading.Thread(target=lambda: memory_metrics_thread())
     pressure_thread = threading.Thread(target=lambda: pressure_metrics_thread())
