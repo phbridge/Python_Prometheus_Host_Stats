@@ -109,22 +109,22 @@ def laptop_metrics_data():
                         data["coretemp_temp1_input"] = f.read().strip()
                         f.close()
                     with open("/sys/class/hwmon/" + entry + "/temp2_input", 'r') as f:
-                        data["coretemp_temp1_input"] = f.read().strip()
+                        data["coretemp_temp2_input"] = f.read().strip()
                         f.close()
                     with open("/sys/class/hwmon/" + entry + "/temp3_input", 'r') as f:
-                        data["coretemp_temp1_input"] = f.read().strip()
+                        data["coretemp_temp3_input"] = f.read().strip()
                         f.close()
                     with open("/sys/class/hwmon/" + entry + "/temp4_input", 'r') as f:
-                        data["coretemp_temp1_input"] = f.read().strip()
+                        data["coretemp_temp4_input"] = f.read().strip()
                         f.close()
                     with open("/sys/class/hwmon/" + entry + "/temp5_input", 'r') as f:
-                        data["coretemp_temp1_input"] = f.read().strip()
+                        data["coretemp_temp5_input"] = f.read().strip()
                         f.close()
                     with open("/sys/class/hwmon/" + entry + "/temp6_input", 'r') as f:
-                        data["coretemp_temp1_input"] = f.read().strip()
+                        data["coretemp_temp6_input"] = f.read().strip()
                         f.close()
                     with open("/sys/class/hwmon/" + entry + "/temp7_input", 'r') as f:
-                        data["coretemp_temp1_input"] = f.read().strip()
+                        data["coretemp_temp7_input"] = f.read().strip()
                         f.close()
                 elif name == "nouveau":
                     pass
