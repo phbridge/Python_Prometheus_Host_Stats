@@ -93,9 +93,9 @@ def laptop_metrics_data():
                     with open("/sys/class/hwmon/" + entry + "/temp1_input", 'r') as f:
                         data["thinkpad_CPU_temp1_input"] = f.read().strip()
                         f.close()
-                    with open("/sys/class/hwmon/" + entry + "/temp2_input", 'r') as f:
-                        data["thinkpad_GPU_temp2_input"] = f.read().strip()
-                        f.close()
+                    # with open("/sys/class/hwmon/" + entry + "/temp2_input", 'r') as f:
+                    #     data["thinkpad_GPU_temp2_input"] = f.read().strip()
+                    #     f.close()
                     with open("/sys/class/hwmon/" + entry + "/temp3_input", 'r') as f:
                         data["thinkpad_temp3_input"] = f.read().strip()
                         f.close()
