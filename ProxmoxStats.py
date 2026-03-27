@@ -129,8 +129,9 @@ def laptop_metrics_data():
                 elif name == "nouveau":
                     pass
                 elif name == "nvme": # two of these
-                    with open("/sys/class/hwmon/" + entry + "/temp1_input") as nvme_temp1_input:
-                        data["ucsi1_in0_input"] = f.read().strip()
+                    with open("/sys/class/hwmon/" + entry + "/temp1_input") as f:
+                        data[str(entry + "_" + "nvme_temp1_input")] = f.read().strip()
+                    pass
 
     for entry in os.listdir("/sys/devices/system/cpu/cpufreq/"):
         name_path = os.path.join("/sys/devices/system/cpu/cpufreq/", entry)
