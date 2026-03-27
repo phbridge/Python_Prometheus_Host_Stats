@@ -142,10 +142,10 @@ def laptop_metrics_data():
 
     string = ""
     for key in data:
-        string += "%s,%s," % (key, data[key])
-    return_string += 'ProxmoxStats,host=%s %s \n' % (HOSTNAME, string)
-    function_logger.info(string)
-    function_logger.info(return_string)
+        string += "%s=%s," % (key, data[key])
+    return_string += 'ProxmoxStats,host=%s %s \n' % (HOSTNAME, string[:-1])
+    # function_logger.info(string)
+    # function_logger.info(return_string)
     return return_string
 
 
