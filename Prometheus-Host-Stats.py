@@ -62,7 +62,7 @@ import requests
 
 import credentials                      # imports static values
 
-FLASK_HOSTNAME = credentials.FLASK_HOSTNAME
+FLASK_HOSTNAME = credentials.HOSTNAME
 ABSOLUTE_PATH = credentials.ABSOLUTE_PATH
 LOGFILE = credentials.LOGFILE
 INFLUX_DB_PATH = credentials.INFLUX_DB_PATH
