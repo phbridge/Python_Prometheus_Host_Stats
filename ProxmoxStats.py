@@ -87,7 +87,11 @@ def laptop_metrics_data():
                         f.close()
                 elif name == "thinkpad":
                     with open("/sys/class/hwmon/" + entry + "/fan1_input", 'r') as f:
-                        data["thinkpad_fan1_input"] = f.read().strip()
+                        fan_speed = f.read().strip()
+                        if int(fan_speed) < 32000:
+                            data["thinkpad_fan1_input"] = fan_speed
+                        else:
+                            data["thinkpad_fan1_input"] = "-1"
                         f.close()
                     with open("/sys/class/hwmon/" + entry + "/fan2_input", 'r') as f:
                         fan_speed = f.read().strip()
