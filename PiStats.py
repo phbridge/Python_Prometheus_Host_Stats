@@ -64,9 +64,6 @@ ABSOLUTE_PATH = credentials.ABSOLUTE_PATH
 LOGFILE = credentials.LOGFILE
 INFLUX_DB_PATH = credentials.INFLUX_DB_PATH
 
-INFLUX_MODE = credentials.INFLUX_MODE
-FLASK_MODE = credentials.FLASK_MODE
-
 THREAD_TO_BREAK = threading.Event()
 
 multiprocessing_manager = Manager()
