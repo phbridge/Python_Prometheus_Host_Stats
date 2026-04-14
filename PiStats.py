@@ -369,7 +369,7 @@ def cpu_metrics_thread():
         timestamp_string = str(int(now.timestamp()) * 1000000000)
         future = now + timedelta(seconds=15)
         influx_upload = ""
-        influx_upload += cpu_metrics_data(influx=True)
+        influx_upload += cpu_metrics_data()
         to_send = ""
         for each in influx_upload.splitlines():
             to_send += each + " " + timestamp_string + "\n"
@@ -430,7 +430,7 @@ def memory_metrics_thread():
         timestamp_string = str(int(now.timestamp()) * 1000000000)
         future = now + timedelta(seconds=30)
         influx_upload = ""
-        influx_upload += memory_metrics_data(influx=True)
+        influx_upload += memory_metrics_data()
         to_send = ""
         for each in influx_upload.splitlines():
             to_send += each + " " + timestamp_string + "\n"
@@ -497,7 +497,7 @@ def pressure_metrics_thread():
         timestamp_string = str(int(now.timestamp()) * 1000000000)
         future = now + timedelta(seconds=30)
         influx_upload = ""
-        influx_upload += pressure_metrics_data(influx=True)
+        influx_upload += pressure_metrics_data()
         to_send = ""
         for each in influx_upload.splitlines():
             to_send += each + " " + timestamp_string + "\n"
@@ -547,7 +547,7 @@ def pi_metrics_thread():
         timestamp_string = str(int(now.timestamp()) * 1000000000)
         future = now + timedelta(seconds=30)
         influx_upload = ""
-        influx_upload += pi_metrics_data(influx=True)
+        influx_upload += pi_metrics_data()
         to_send = ""
         for each in influx_upload.splitlines():
             to_send += each + " " + timestamp_string + "\n"
@@ -613,7 +613,7 @@ def network_metrics_thread():
         timestamp_string = str(int(now.timestamp()) * 1000000000)
         future = now + timedelta(seconds=30)
         influx_upload = ""
-        influx_upload += network_metrics_data(influx=True)
+        influx_upload += network_metrics_data()
         to_send = ""
         for each in influx_upload.splitlines():
             to_send += each + " " + timestamp_string + "\n"
@@ -656,7 +656,7 @@ def disk_metrics_thread():
         timestamp_string = str(int(now.timestamp()) * 1000000000)
         future = now + timedelta(seconds=30)
         influx_upload = ""
-        influx_upload += disk_metrics_data(influx=True)
+        influx_upload += disk_metrics_data()
         to_send = ""
         for each in influx_upload.splitlines():
             to_send += each + " " + timestamp_string + "\n"
