@@ -452,7 +452,7 @@ def memory_metrics_thread():
             THREAD_TO_BREAK.wait(time_to_sleep)
 
 
-def pressure_metrics_data(influx=False):
+def pressure_metrics_data():
     return_string = ""
     with open("/proc/pressure/io") as io:
         for ioline in io.readlines():
@@ -569,7 +569,7 @@ def pi_metrics_thread():
             THREAD_TO_BREAK.wait(time_to_sleep)
 
 
-def network_metrics_data(influx=False):
+def network_metrics_data():
     return_string = ""
     with open("/proc/net/dev") as netfile:
         network_scrape = {}
@@ -770,17 +770,13 @@ def graceful_killer(signal_number, frame):
     THREAD_TO_BREAK.set()
     function_logger.info("set thread to break")
     cpu_update_thread.join()
-    if INFLUX_MODE:
-        cpu_thread.join()
-        mem_thread.join()
-        pressure_thread.join()
-        pi_thread.join()
-        network_thread.join()
-        disk_thread.join()
+    cpu_thread.join()
+    mem_thread.join()
+    pressure_thread.join()
+    pi_thread.join()
+    network_thread.join()
+    disk_thread.join()
     function_logger.info("joined all threads")
-    if FLASK_MODE:
-        http_server.stop()
-        function_logger.info("stopped HTTP server")
     quit()
 
 
